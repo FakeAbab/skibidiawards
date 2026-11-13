@@ -35,12 +35,19 @@
             object-fit: cover;
         }
 
-        /* Warstwy do przejścia typu Windows Movie Maker (Star Wipe) */
+        /* Warstwa aktualnego ekranu */
         #app-root {
             position: relative;
             z-index: 1;
+            transition: filter 0.4s ease;
         }
 
+        /* Lekkie przyciemnienie starego ekranu podczas trwania przejścia, żeby gwiazda nowego ekranu była super wyraźna */
+        #app-root.dimmed-during-wipe {
+            filter: brightness(0.45);
+        }
+
+        /* Nakładka do przejścia Windows Movie Maker (Star Iris Wipe) */
         #transition-incoming-layer {
             position: fixed;
             top: 0;
@@ -52,19 +59,21 @@
             padding: 10px;
             box-sizing: border-box;
             pointer-events: none;
-            /* Start: mikroskopijna gwiazdka na środku ekranu */
+            /* Złota poświata na krawędziach wyłaniającej się gwiazdy */
+            filter: drop-shadow(0 0 12px #FFCC00);
+            /* Start: malutka 5-ramienna gwiazda na środku */
             clip-path: polygon(
-                50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%,
-                50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%
+                50% 48%, 50.6% 49.4%, 52% 49.4%, 50.9% 50.3%, 51.3% 51.7%,
+                50% 50.8%, 48.7% 51.7%, 49.1% 50.3%, 48% 49.4%, 49.4% 49.4%
             );
-            transition: clip-path 1.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: clip-path 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        /* Koniec: gwiazda rozszerza się poza krawędzie ekranu, odsłaniając cały nowy widok */
+        /* Koniec: wielka 5-ramienna gwiazda odkrywająca cały nowy widok */
         #transition-incoming-layer.star-wipe-open {
             clip-path: polygon(
-                50% -260%, 82% -65%, 280% -65%, 125% 45%, 185% 230%,
-                50% 120%, -85% 230%, -25% 45%, -180% -65%, 18% -65%
+                50% -280%, 85% -60%, 290% -60%, 130% 55%, 190% 250%,
+                50% 130%, -90% 250%, -30% 55%, -190% -60%, 15% -60%
             );
         }
 
@@ -85,7 +94,7 @@
             width: 1120px;
             max-width: 96vw;
             margin: 15px auto;
-            background-color: rgba(0, 0, 85, 0.96);
+            background-color: rgba(0, 0, 85, 0.97);
             border: 5px ridge #FFCC00;
             padding: 18px 24px;
             box-shadow: 0 0 35px rgba(0, 0, 0, 0.95);
@@ -378,7 +387,7 @@
         ];
 
         let state = {
-            view: 'home', // 'home', 'voting', 'summary', 'download'
+            view: 'home',
             currentCategoryIndex: 0,
             votes: {}
         };
@@ -416,7 +425,6 @@
 
         // Generuje kod HTML dla aktualnego stanu
         function buildHtmlForCurrentState() {
-            // WIDOK GŁOSOWANIA: SZEROKI PROSTOKĄT BOKIEM (TYTUŁ NA GÓRZE + 6 OPCJI 2x3)
             if (state.view === 'voting') {
                 const cat = categories[state.currentCategoryIndex];
                 const total = categories.length;
@@ -452,7 +460,6 @@
                             <button class="retro-btn-small" onclick="showHome()">✖ WYJDŹ</button>
                         </div>
 
-                        <!-- TYTUŁ KATEGORII NA ŚRODKU NA GÓRZE -->
                         <div style="text-align: center; margin-bottom: 8px; border-bottom: 2px groove #FFCC00; padding-bottom: 8px;">
                             <h1 style="color: #FFCC00; margin: 2px 0; font-size: 26px; text-shadow: 2px 2px #000000; text-transform: uppercase;">
                                 ${cat.name}
@@ -460,10 +467,8 @@
                             <p style="font-size: 14px; color: #00FFFF; margin: 0;">${cat.description}</p>
                         </div>
 
-                        <!-- 6 OPCJI DO WYBORU (2 RZĘDY PO 3 OPCJE) -->
                         ${gridHtml}
 
-                        <!-- NAWIGACJA NA DOLE -->
                         <div style="display: flex; justify-content: space-between; margin-top: 12px; border-top: 2px groove #808080; padding-top: 10px;">
                             <button class="retro-btn-small" onclick="prevCategory()">&lt;&lt; POPRZEDNIA KATEGORIA</button>
                             <button class="retro-btn-small" style="background-color: ${selectedId ? '#FFCC00' : '#888888'}; font-size: 14px;" onclick="nextCategory()">
@@ -474,7 +479,6 @@
                 `;
             }
 
-            // POZOSTAŁE WIDOKI: KLASYCZNA TABELA PORTALU 2006
             let mainContentHtml = '';
 
             if (state.view === 'home') {
@@ -671,36 +675,41 @@
             document.getElementById('app-root').innerHTML = buildHtmlForCurrentState();
         }
 
-        // Prawdziwe przejście Windows Movie Maker Star Wipe:
-        // Nowy ekran wyłania się ze środka w kształcie powiększającej się gwiazdy!
+        // Przejście typu Windows Movie Maker Star Wipe
         function runMovieMakerStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
             playAlternatingTransitionSound();
 
-            // 1. Zmieniamy stan i renderujemy NOWY widok wewnątrz warstwy przyciętej do małej gwiazdy na środku
-            updateStateCallback();
+            const appRoot = document.getElementById('app-root');
             const incomingLayer = document.getElementById('transition-incoming-layer');
+
+            // Przyciemniamy lekko stary ekran pod spodem, żeby kontur gwiazdy był super wyraźny
+            appRoot.classList.add('dimmed-during-wipe');
+
+            // Renderujemy NOWY widok wewnątrz nakładki przyciętej do małej gwiazdy na środku
+            updateStateCallback();
             incomingLayer.innerHTML = buildHtmlForCurrentState();
 
-            // Wymuszenie przeliczenia pozycji startowej gwiazdy przez przeglądarkę
             incomingLayer.classList.remove('star-wipe-open');
             void incomingLayer.offsetWidth;
 
-            // 2. Powiększamy gwiazdę – nowy widok wyłania się ze środka ekranu!
+            // Powiększamy gwiazdę – nowy widok wyłania się ze środka ekranu!
             incomingLayer.classList.add('star-wipe-open');
 
-            // 3. Po zakończeniu animacji (1.15s) przenosimy gotowy widok do głównej warstwy i resetujemy nakładkę
+            // Po zakończeniu animacji (1.2s) przenosimy nowy widok do głównego kontenera
             setTimeout(() => {
+                appRoot.classList.remove('dimmed-during-wipe');
                 render();
+
                 incomingLayer.style.transition = 'none';
                 incomingLayer.classList.remove('star-wipe-open');
                 incomingLayer.innerHTML = '';
                 void incomingLayer.offsetWidth;
                 incomingLayer.style.transition = '';
                 isTransitioning = false;
-            }, 1150);
+            }, 1200);
         }
 
         function showHome() {
