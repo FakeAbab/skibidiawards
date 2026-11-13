@@ -49,7 +49,7 @@
         }
 
         .sidebar-cell {
-            width: 210px;
+            width: 225px;
             background-color: #000044;
             font-family: Arial, Helvetica, sans-serif;
             font-size: 13px;
@@ -116,6 +116,34 @@
             border: 2px inset #808080;
         }
 
+        .mega-download-btn {
+            display: inline-block;
+            background: linear-gradient(180deg, #00FF00 0%, #009900 100%);
+            color: #000000;
+            font-family: "Comic Sans MS", "Arial Black", Impact, sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            padding: 18px 20px;
+            border: 6px outset #88FF88;
+            text-decoration: none;
+            text-shadow: 1px 1px 0px #FFFFFF;
+            box-shadow: 0 0 20px #00FF00;
+            cursor: pointer;
+            word-break: break-word;
+            line-height: 1.25;
+        }
+
+        .mega-download-btn:hover {
+            background: linear-gradient(180deg, #FFFF00 0%, #FF9900 100%);
+            border-color: #FFFF88;
+            box-shadow: 0 0 25px #FFFF00;
+            transform: scale(1.02);
+        }
+
+        .mega-download-btn:active {
+            border: 6px inset #006600;
+        }
+
         .nominee-box {
             background-color: #000033;
             border: 3px outset #6666CC;
@@ -151,7 +179,7 @@
         }
 
         .blink {
-            animation: blinker 1s linear infinite;
+            animation: blinker 0.7s linear infinite;
         }
 
         @keyframes blinker {
@@ -179,6 +207,18 @@
             font-family: "Courier New", monospace;
             font-size: 12px;
         }
+
+        .trust-badge {
+            display: inline-block;
+            background-color: #000088;
+            border: 2px outset #00FFFF;
+            color: #00FFFF;
+            font-family: "Courier New", monospace;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 8px;
+            margin: 3px;
+        }
     </style>
 </head>
 <body>
@@ -191,7 +231,6 @@
                     <marquee scrollamount="6">*** UWAGA! RUSZYŁO OFICJALNE GŁOSOWANIE NA SKIBIDI AWARDS 2006! ODDAJ SWÓJ GŁOS JUŻ TERAZ I POKAŻ KTO RZĄDZI W SIECI! ***</marquee>
                 </div>
                 <br>
-                <!-- Zaktualizowane ścieżki do folderu slimakajki -->
                 <div>
                     <img src="slimakajki/TEKST-SKIBIDIAWARDS.jpg" alt="SKIBIDI AWARDS 2006" style="max-width: 100%; height: auto; border: 2px solid #333;">
                 </div>
@@ -214,6 +253,7 @@
                 <div class="sidebar-title">🔥 POPULARNE:</div>
                 <a class="sidebar-link" onclick="showHome()">» Strona Główna</a>
                 <a class="sidebar-link" onclick="startVoting()">» GŁOSOWANIE 2006! <span class="blink" style="color: #FF0000; font-weight: bold;">[NEW]</span></a>
+                <a class="sidebar-link" onclick="showDownload()" style="color: #00FF00; font-weight: bold;">» AJCZOKTWERK DOWNLOAD <span class="blink" style="color: #FFFF00;">[HOT!]</span></a>
                 <a class="sidebar-link" onclick="alertPlaceholder('Top 10 Śmiesznych Filmików')">» Top 10 Śmiesznych Filmików</a>
                 <a class="sidebar-link" onclick="alertPlaceholder('Dzwonki Polifoniczne SMS')">» Dzwonki Polifoniczne na Komórkę</a>
                 <a class="sidebar-link" onclick="alertPlaceholder('Księga Gości')">» Księga Gości (134 wpisy)</a>
@@ -320,7 +360,7 @@
         ];
 
         let state = {
-            view: 'home', // 'home', 'voting', 'summary'
+            view: 'home', // 'home', 'voting', 'summary', 'download'
             currentCategoryIndex: 0,
             votes: {}
         };
@@ -345,8 +385,51 @@
                         <button class="retro-btn" onclick="startVoting()">&gt;&gt; PRZEJDŹ DO GŁOSOWANIA &lt;&lt;</button>
 
                         <div class="placeholder-banner">
-                            <b>[ SEKJA DO UZUPEŁNIENIA / PLACEHOLDER ]</b><br><br>
+                            <b>[ SEKCJA DO UZUPEŁNIENIA / PLACEHOLDER ]</b><br><br>
                             Tutaj możemy wstawić np. filmik promocyjny, listę sponsorów, regulamin albo kolejne gify!
+                        </div>
+                    </div>
+                `;
+            } else if (state.view === 'download') {
+                screen.innerHTML = `
+                    <div style="text-align: center; padding: 10px; background-color: #000022; border: 3px ridge #00FF00;">
+                        <div style="background-color: #FF0000; color: #FFFF00; font-weight: bold; padding: 5px; font-family: 'Courier New', monospace; font-size: 14px;">
+                            <span class="blink">⚠️ YOUR FILE IS READY TO DOWNLOAD! ⚠️</span>
+                        </div>
+
+                        <h2 style="color: #00FF00; font-family: 'Comic Sans MS', Impact, sans-serif; margin: 12px 0 6px 0; text-shadow: 2px 2px #000000;">
+                            PLIK: AJCZOKTWERK.mp4
+                        </h2>
+
+                        <div style="margin-bottom: 12px;">
+                            <span class="trust-badge">✔ 100% VIRUS FREE</span>
+                            <span class="trust-badge">✔ NORTON ANTIVIRUS 2006 OK!</span>
+                            <span class="trust-badge">✔ FAST SERVER (RAPIDSHARE)</span>
+                        </div>
+
+                        <div style="background-color: #000044; border: 2px inset #808080; padding: 8px; margin-bottom: 16px; font-family: 'Courier New', monospace; font-size: 12px; color: #CCCCCC;">
+                            Nazwa pliku: <b style="color: #FFFFFF;">AJCZOKTWERK.mp4</b><br>
+                            Źródło: <b style="color: #00FFFF;">slimakajki/AJCZOKTWERK.mp4</b><br>
+                            Status: <b style="color: #00FF00;">ONLINE (Darmowy transfer bez limitu!)</b>
+                        </div>
+
+                        <div style="font-size: 24px; color: #FFFF00; margin-bottom: 8px;">
+                            <span class="blink">⬇⬇⬇ KLIKNIJ PONIŻEJ ⬇⬇⬇</span>
+                        </div>
+
+                        <!-- Wielki przycisk pobierający bezpośrednio z folderu slimakajki pod nazwą AJCZOKTWERK -->
+                        <div style="margin: 15px 0;">
+                            <a href="slimakajki/AJCZOKTWERK.mp4" download="AJCZOKTWERK.mp4" class="mega-download-btn">
+                                DOWNLOAD 4 FREE RLY NO SCAM PLS DOWNLOAD NOW NOWWWWW!!!!!!!!1111111111111
+                            </a>
+                        </div>
+
+                        <div style="font-size: 11px; color: #AAAAAA; font-family: Arial, sans-serif; margin-top: 12px;">
+                            * Jeśli pobieranie nie wystartuje automatycznie w ciągu 3 sekund, kliknij przycisk powyżej prawym przyciskiem myszy i wybierz „Zapisz element docelowy jako...”.
+                        </div>
+
+                        <div style="margin-top: 18px; border-top: 2px groove #808080; padding-top: 10px;">
+                            <button class="retro-btn-small" onclick="showHome()">« WRÓĆ NA STRONĘ GŁÓWNĄ</button>
                         </div>
                     </div>
                 `;
@@ -449,6 +532,11 @@
 
         function showHome() {
             state.view = 'home';
+            render();
+        }
+
+        function showDownload() {
+            state.view = 'download';
             render();
         }
 
