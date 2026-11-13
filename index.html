@@ -1,295 +1,479 @@
 <!DOCTYPE html>
-<html lang="pl" class="dark">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Streamer Awards - Głosowanie</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <title>~*~ SKIBIDI AWARDS 2006 - OFICJALNY PORTAL GŁOSOWANIA ~*~</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Outfit', sans-serif; }
+        body {
+            background-color: #000033;
+            background-image: radial-gradient(#ffffff 1px, transparent 1px), radial-gradient(#ffcc00 1px, #000033 1px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: #FFFF00;
+            font-family: "Times New Roman", Times, serif;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .main-table {
+            width: 850px;
+            max-width: 100%;
+            margin: 0 auto;
+            background-color: #000066;
+            border: 4px ridge #C0C0C0;
+            border-collapse: separate;
+            border-spacing: 6px;
+        }
+
+        td, th {
+            border: 2px inset #808080;
+            padding: 10px;
+            vertical-align: top;
+        }
+
+        .header-cell {
+            background-color: #000000;
+            text-align: center;
+            border: 3px groove #FFCC00;
+        }
+
+        .marquee-bar {
+            background-color: #FF0000;
+            color: #FFFFFF;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 4px;
+            border: 2px outset #FF6666;
+        }
+
+        .sidebar-cell {
+            width: 210px;
+            background-color: #000044;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 13px;
+        }
+
+        .sidebar-title {
+            background-color: #FFCC00;
+            color: #000000;
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+            border: 2px outset #FFFFFF;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-link {
+            display: block;
+            color: #00FFFF;
+            text-decoration: underline;
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+
+        .sidebar-link:hover {
+            color: #FF00FF;
+            background-color: #000088;
+        }
+
+        .content-cell {
+            background-color: #000055;
+            color: #FFFFFF;
+        }
+
+        .retro-btn {
+            background-color: #C0C0C0;
+            color: #000000;
+            font-family: "Arial Black", Impact, sans-serif;
+            font-size: 18px;
+            padding: 10px 24px;
+            border: 4px outset #FFFFFF;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .retro-btn:active {
+            border: 4px inset #808080;
+            background-color: #A0A0A0;
+        }
+
+        .retro-btn-small {
+            background-color: #C0C0C0;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            font-size: 12px;
+            padding: 4px 10px;
+            border: 2px outset #FFFFFF;
+            cursor: pointer;
+        }
+
+        .retro-btn-small:active {
+            border: 2px inset #808080;
+        }
+
+        .nominee-box {
+            background-color: #000033;
+            border: 3px outset #6666CC;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .nominee-box:hover {
+            border-color: #FFFF00;
+            background-color: #000077;
+        }
+
+        .nominee-selected {
+            background-color: #660000 !important;
+            border: 3px inset #FFCC00 !important;
+        }
+
+        .avatar-placeholder {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 8px auto;
+            background-color: #C0C0C0;
+            color: #000000;
+            border: 2px inset #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
+        .counter-box {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
+            border: 2px inset #808080;
+            padding: 2px 8px;
+            display: inline-block;
+            letter-spacing: 2px;
+        }
+
+        .placeholder-banner {
+            background-color: #111111;
+            border: 2px dashed #FFCC00;
+            color: #CCCCCC;
+            text-align: center;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+        }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-zinc-950">
+<body>
 
-    <!-- Kontener główny aplikacji -->
-    <div id="app" class="flex-grow flex flex-col">
-        <!-- Treść ładowana dynamicznie przez JS -->
-    </div>
+    <table class="main-table">
+        <!-- NAGŁÓWEK Z GRAFIKAMI Z FOLDERU slimakajki -->
+        <tr>
+            <td colspan="2" class="header-cell">
+                <div class="marquee-bar">
+                    <marquee scrollamount="6">*** UWAGA! RUSZYŁO OFICJALNE GŁOSOWANIE NA SKIBIDI AWARDS 2006! ODDAJ SWÓJ GŁOS JUŻ TERAZ I POKAŻ KTO RZĄDZI W SIECI! ***</marquee>
+                </div>
+                <br>
+                <!-- Zaktualizowane ścieżki do folderu slimakajki -->
+                <div>
+                    <img src="slimakajki/TEKST-SKIBIDIAWARDS.jpg" alt="SKIBIDI AWARDS 2006" style="max-width: 100%; height: auto; border: 2px solid #333;">
+                </div>
+                <div style="margin-top: 8px;">
+                    <img src="slimakajki/TEKST-GLOSUJTERAZ.gif" alt="GLOSUJ TERAZ" style="max-width: 100%; height: auto;">
+                </div>
+                <div style="margin-top: 12px; margin-bottom: 6px;">
+                    <button class="retro-btn" onclick="startVoting()">&gt;&gt; KLIKNIJ TUTAJ ABY GŁOSOWAĆ &lt;&lt;</button>
+                </div>
+                <div style="font-size: 12px; color: #00FF00; font-family: 'Courier New', monospace;">
+                    [ Najlepiej oglądać w rozdzielczości 800x600 w Internet Explorer 6.0 ]
+                </div>
+            </td>
+        </tr>
 
-    <!-- Stopka -->
-    <footer class="py-6 text-center text-xs text-zinc-600 border-t border-zinc-900">
-        Streamer Awards • Oficjalny Panel Głosowania
-    </footer>
+        <!-- GŁÓWNA ZAWARTOŚĆ + PASEK BOCZNY -->
+        <tr>
+            <!-- PASEK BOCZNY: POPULARNE -->
+            <td class="sidebar-cell">
+                <div class="sidebar-title">🔥 POPULARNE:</div>
+                <a class="sidebar-link" onclick="showHome()">» Strona Główna</a>
+                <a class="sidebar-link" onclick="startVoting()">» GŁOSOWANIE 2006! <span class="blink" style="color: #FF0000; font-weight: bold;">[NEW]</span></a>
+                <a class="sidebar-link" onclick="alertPlaceholder('Top 10 Śmiesznych Filmików')">» Top 10 Śmiesznych Filmików</a>
+                <a class="sidebar-link" onclick="alertPlaceholder('Dzwonki Polifoniczne SMS')">» Dzwonki Polifoniczne na Komórkę</a>
+                <a class="sidebar-link" onclick="alertPlaceholder('Księga Gości')">» Księga Gości (134 wpisy)</a>
+                <a class="sidebar-link" onclick="alertPlaceholder('Archiwum Gali 2005')">» Wyniki z roku 2005</a>
+                <a class="sidebar-link" onclick="alertPlaceholder('Kontakt z Adminem')">» Napisz do Webmastera</a>
+
+                <hr style="border: 1px inset #808080; margin: 12px 0;">
+
+                <div class="sidebar-title">📊 STATYSTYKI</div>
+                <div style="text-align: center; color: #FFFFFF; font-size: 11px;">
+                    Odwiedzin strony:<br>
+                    <div class="counter-box" style="margin-top: 4px;">0048291</div>
+                    <br><br>
+                    Online teraz: <b style="color: #00FF00;">14 osób</b>
+                </div>
+
+                <hr style="border: 1px inset #808080; margin: 12px 0;">
+
+                <div class="placeholder-banner">
+                    [MIEJSCE NA TWÓJ BANER 120x240]<br><br>
+                    Tutaj dodamy później kolejne rzeczy!
+                </div>
+            </td>
+
+            <!-- GŁÓWNY EKRAN DYNAMICZNY -->
+            <td class="content-cell" id="main-screen">
+                <!-- Treść ładowana przez JavaScript -->
+            </td>
+        </tr>
+
+        <!-- DOLNY PASEK Z PLACEHOLDERAMI -->
+        <tr>
+            <td colspan="2" style="background-color: #000033; text-align: center;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <td style="width: 33%; background-color: #000044; text-align: center;">
+                            <b style="color: #FFCC00;">[ PLACEHOLDER #1 ]</b><br>
+                            <span style="font-size: 12px; color: #CCCCCC;">Miejsce na ogłoszenie / link partnerski / gif</span>
+                        </td>
+                        <td style="width: 33%; background-color: #000044; text-align: center;">
+                            <b style="color: #FFCC00;">[ PLACEHOLDER #2 ]</b><br>
+                            <span style="font-size: 12px; color: #CCCCCC;">Miejsce na ankietę lub newsa z ostatniej chwili</span>
+                        </td>
+                        <td style="width: 33%; background-color: #000044; text-align: center;">
+                            <b style="color: #FFCC00;">[ PLACEHOLDER #3 ]</b><br>
+                            <span style="font-size: 12px; color: #CCCCCC;">Miejsce na odtwarzacz MIDI / MP3</span>
+                        </td>
+                    </tr>
+                </table>
+                <div style="margin-top: 10px; font-size: 11px; color: #808080; font-family: Arial, sans-serif;">
+                    Copyright &copy; 2006 SKIBIDI AWARDS TEAM. Wszelkie prawa zastrzeżone. Kopiowanie bez zgody zabronione!
+                </div>
+            </td>
+        </tr>
+    </table>
 
     <script>
-        // --- KONFIGURACJA STRONY ---
-        const EVENT_CONFIG = {
-            title: "STREAMER AWARDS 2026",
-            subtitle: "Wybierz swoich ulubionych twórców roku. Zagłosuj w poniższych kategoriach, a na koniec sprawdź swoje oficjalne podsumowanie (VIP Ballot)."
-        };
-
+        // --- KONFIGURACJA KATEGORII (PLACEHOLDERY) ---
         const categories = [
             {
                 id: 1,
-                name: "Streamer Roku",
-                description: "Twórca, który zdefiniował ten rok swoimi niesamowitymi transmisjami.",
+                name: "Streamer Roku 2006",
+                description: "Najlepszy twórca w całym polskim internecie!",
                 nominees: [
-                    { id: 's1', name: 'xThzt', tag: '@xthzt', image: '' },
-                    { id: 's2', name: 'VibeCheck', tag: '@vibecheck', image: '' },
-                    { id: 's3', name: 'KrólowaChatu', tag: '@krolowachat', image: '' },
-                    { id: 's4', name: 'PixelArtur', tag: '@pixelartur', image: '' }
+                    { id: 's1', name: 'xThzt', tag: 'GG: 482910', image: '' },
+                    { id: 's2', name: 'VibeCheck', tag: 'GG: 192834', image: '' },
+                    { id: 's3', name: 'KrólowaChatu', tag: 'GG: 993812', image: '' },
+                    { id: 's4', name: 'PixelArtur', tag: 'GG: 551029', image: '' }
                 ]
             },
             {
                 id: 2,
-                name: "Najlepszy Stream Just Chatting",
-                description: "Mistrzowie konwersacji, podcastów i budowania relacji z widzami.",
+                name: "Król Just Chatting / Gadu-Gadu",
+                description: "Najlepsze rozmowy do późnej nocy na Neostradzie.",
                 nominees: [
-                    { id: 's5', name: 'GadulaPL', tag: '@gadulapl', image: '' },
-                    { id: 's6', name: 'KawiarniaKrótkich', tag: '@kawiarnia', image: '' },
-                    { id: 's7', name: 'NocneGadki', tag: '@nocnegadki', image: '' },
-                    { id: 's8', name: 'PanEgzekutor', tag: '@panegzekutor', image: '' }
+                    { id: 's5', name: 'GadulaPL', tag: 'Neostrada 512kb', image: '' },
+                    { id: 's6', name: 'KawiarniaKrótkich', tag: 'Tlen.pl', image: '' },
+                    { id: 's7', name: 'NocneGadki', tag: 'IRC #polska', image: '' },
+                    { id: 's8', name: 'PanEgzekutor', tag: 'Skype 2.0', image: '' }
                 ]
             },
             {
                 id: 3,
-                name: "Odkrycie Roku",
-                description: "Gwiazdy, które w tym roku eksplodowały na scenie streamingowej.",
+                name: "Odkrycie Roku 2006",
+                description: "Nowa gwiazda, która rozbiła bank na Naszej-Klasie i forach.",
                 nominees: [
-                    { id: 's9', name: 'NowyNaRewirze', tag: '@nowynarewirze', image: '' },
-                    { id: 's10', name: 'ŚwieżaKrew', tag: '@swiezakrew', image: '' },
-                    { id: 's11', name: 'Błyskawica', tag: '@blyskawica', image: '' },
-                    { id: 's12', name: 'TurboStart', tag: '@turbostart', image: '' }
+                    { id: 's9', name: 'NowyNaRewirze', tag: 'Debiutant', image: '' },
+                    { id: 's10', name: 'ŚwieżaKrew', tag: 'Debiutant', image: '' },
+                    { id: 's11', name: 'Błyskawica', tag: 'Debiutant', image: '' },
+                    { id: 's12', name: 'TurboStart', tag: 'Debiutant', image: '' }
                 ]
             },
             {
                 id: 4,
-                name: "Najlepszy Streamer Gamingowy",
-                description: "Najwyższy skill, najwięcej emocji i niepowtarzalne akcje w grach.",
+                name: "Mistrz Gier Komputerowych",
+                description: "Najlepszy gracz CS 1.6, Tibii, Gothica i Metina.",
                 nominees: [
-                    { id: 's13', name: 'ProGamer_99', tag: '@progamer', image: '' },
-                    { id: 's14', name: 'AimBotGirl', tag: '@aimbotgirl', image: '' },
-                    { id: 's15', name: 'SpeedrunMaster', tag: '@speedrun', image: '' },
-                    { id: 's16', name: 'CierpliwyGracz', tag: '@cierpliwy', image: '' }
-                ]
-            },
-            {
-                id: 5,
-                name: "Wydarzenie / Stream Specjalny Roku",
-                description: "Najlepszy projekt, event plenerowy lub charytatywny.",
-                nominees: [
-                    { id: 's17', name: 'WielkaWyprawa 24h', tag: '@wyprawa', image: '' },
-                    { id: 's18', name: 'Charytatywny Maraton', tag: '@pomagamy', image: '' },
-                    { id: 's19', name: 'Bitwa Streamerów', tag: '@bitwa', image: '' },
-                    { id: 's20', name: 'Wyspa Przetrwania', tag: '@wyspa', image: '' }
+                    { id: 's13', name: 'ProGamer_99', tag: 'CS 1.6 Pro', image: '' },
+                    { id: 's14', name: 'AimBotGirl', tag: 'Tibia 7.6', image: '' },
+                    { id: 's15', name: 'SpeedrunMaster', tag: 'Gothic II', image: '' },
+                    { id: 's16', name: 'CierpliwyGracz', tag: 'Quake III', image: '' }
                 ]
             }
         ];
 
         let state = {
-            step: 'intro', // 'intro', 'voting', 'summary'
+            view: 'home', // 'home', 'voting', 'summary'
             currentCategoryIndex: 0,
-            votes: {} // { categoryId: nomineeId }
+            votes: {}
         };
 
         function render() {
-            const app = document.getElementById('app');
-            
-            if (state.step === 'intro') {
-                app.innerHTML = `
-                    <div class="flex-grow flex flex-col items-center justify-center p-6 text-center max-w-2xl mx-auto">
-                        <div class="mb-6 relative">
-                            <div class="absolute -inset-1 rounded-full bg-gradient-to-r from-gold-500 to-amber-700 opacity-30 blur-lg animate-pulse"></div>
-                            <div class="relative w-24 h-24 rounded-2xl bg-zinc-900 border border-gold-500/30 flex items-center justify-center text-gold-400 shadow-2xl">
-                                <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                </svg>
-                            </div>
+            const screen = document.getElementById('main-screen');
+
+            if (state.view === 'home') {
+                screen.innerHTML = `
+                    <div style="text-align: center; padding: 10px;">
+                        <h2 style="color: #FFCC00; text-decoration: underline; margin-top: 0;">WITAJ NA OFICJALNEJ STRONIE SKIBIDI AWARDS 2006!</h2>
+                        <p style="font-size: 15px; line-height: 1.5; color: #FFFFFF;">
+                            To najważniejsze wydarzenie w historii internetu! Wybierz swoich faworytów w <b>${categories.length} kategoriach</b>, 
+                            a na końcu wygeneruj swoją <b>Kartę Głosowania (VIP Ballot)</b>, zrób screena i wrzuć na forum lub wyślij znajomym na GG!
+                        </p>
+
+                        <div style="background-color: #000033; border: 2px solid #FF0000; padding: 12px; margin: 15px 0;">
+                            <span class="blink" style="color: #FF0000; font-weight: bold;">!!! WAŻNY KOMUNIKAT !!!</span><br>
+                            <span style="font-size: 13px; color: #FFFF00;">Głosowanie jest całkowicie darmowe (nie trzeba wysyłać SMS-a za 9zł + VAT).</span>
                         </div>
-                        <span class="text-xs uppercase tracking-widest text-gold-500 font-semibold mb-3 bg-gold-500/10 px-3 py-1 rounded-full border border-gold-500/20">Oficjalny Plebiscyt</span>
-                        <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-4 text-white">${EVENT_CONFIG.title}</h1>
-                        <p class="text-zinc-400 text-base sm:text-lg mb-8 leading-relaxed">${EVENT_CONFIG.subtitle}</p>
-                        <button onclick="startVoting()" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-gold-400 hover:to-amber-500 text-zinc-950 font-bold rounded-xl shadow-lg shadow-gold-500/20 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer">
-                            ROZPOCZNIJ GŁOSOWANIE
-                        </button>
+
+                        <button class="retro-btn" onclick="startVoting()">&gt;&gt; PRZEJDŹ DO GŁOSOWANIA &lt;&lt;</button>
+
+                        <div class="placeholder-banner">
+                            <b>[ SEKJA DO UZUPEŁNIENIA / PLACEHOLDER ]</b><br><br>
+                            Tutaj możemy wstawić np. filmik promocyjny, listę sponsorów, regulamin albo kolejne gify!
+                        </div>
                     </div>
                 `;
-            } else if (state.step === 'voting') {
+            } else if (state.view === 'voting') {
                 const cat = categories[state.currentCategoryIndex];
-                const totalCats = categories.length;
-                const progressPercent = ((state.currentCategoryIndex + 1) / totalCats) * 100;
-                const selectedNomineeId = state.votes[cat.id];
+                const total = categories.length;
+                const selectedId = state.votes[cat.id];
 
-                let dotsHtml = '';
-                for (let i = 0; i < totalCats; i++) {
-                    let dotBg = 'bg-zinc-800 border-zinc-700';
-                    if (i < state.currentCategoryIndex || state.votes[categories[i].id]) {
-                        dotBg = 'bg-gold-500 border-gold-500 text-zinc-950';
-                    } else if (i === state.currentCategoryIndex) {
-                        dotBg = 'bg-zinc-900 border-gold-500 text-gold-400 ring-2 ring-gold-500/30';
-                    }
-                    dotsHtml += `<div class="w-8 h-8 rounded-full border flex items-center justify-center text-xs font-bold transition-all ${dotBg}">${i + 1}</div>`;
-                }
-
-                let nomineesHtml = '';
-                cat.nominees.forEach(nom => {
-                    const isSelected = selectedNomineeId === nom.id;
-                    let cardBorder = isSelected ? 'border-gold-500 bg-gold-500/10 shadow-lg shadow-gold-500/10' : 'border-zinc-800 bg-zinc-900/60 hover:border-zinc-700';
-                    let checkMark = isSelected ? `
-                        <div class="absolute top-3 right-3 w-6 h-6 bg-gold-500 text-zinc-950 rounded-full flex items-center justify-center font-bold text-xs shadow">
-                            ✓
-                        </div>` : '';
-
-                    let avatarContent = nom.image ? 
-                        `<img src="${nom.image}" class="w-20 h-20 rounded-full object-cover border-2 border-gold-500/30 mb-3">` :
-                        `<div class="w-20 h-20 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-gold-400 font-bold text-xl mb-3 shadow-inner">${nom.name.substring(0, 2).toUpperCase()}</div>`;
+                let nomineesHtml = '<table style="width: 100%; border-collapse: separate; border-spacing: 8px;"><tr>';
+                cat.nominees.forEach((nom, idx) => {
+                    if (idx === 2) nomineesHtml += '</tr><tr>';
+                    const isSelected = selectedId === nom.id;
+                    const avatar = nom.image 
+                        ? `<img src="${nom.image}" style="width:72px; height:72px; border:2px inset #FFF; object-fit:cover; margin-bottom:6px;">`
+                        : `<div class="avatar-placeholder">${nom.name.substring(0, 2).toUpperCase()}</div>`;
 
                     nomineesHtml += `
-                        <div onclick="voteForNominee('${cat.id}', '${nom.id}')" class="relative group cursor-pointer p-5 rounded-2xl border ${cardBorder} transition-all flex flex-col items-center text-center">
-                            ${checkMark}
-                            ${avatarContent}
-                            <h3 class="font-bold text-lg text-white mb-1 group-hover:text-gold-400 transition-colors">${nom.name}</h3>
-                            <span class="text-xs text-zinc-500">${nom.tag}</span>
-                        </div>
+                        <td style="width: 50%; border: none; padding: 0;">
+                            <div class="nominee-box ${isSelected ? 'nominee-selected' : ''}" onclick="selectNominee(${cat.id}, '${nom.id}')">
+                                ${avatar}
+                                <div style="font-weight: bold; font-size: 16px; color: ${isSelected ? '#FFFF00' : '#00FFFF'};">
+                                    ${isSelected ? '★ ' + nom.name + ' ★' : nom.name}
+                                </div>
+                                <div style="font-size: 11px; color: #CCCCCC; margin-top: 3px;">${nom.tag}</div>
+                                <div style="margin-top: 6px; font-size: 11px; font-family: Arial; color: ${isSelected ? '#00FF00' : '#888888'};">
+                                    ${isSelected ? '[ WYBRANO ]' : '[ Kliknij aby wybrać ]'}
+                                </div>
+                            </div>
+                        </td>
                     `;
                 });
+                nomineesHtml += '</tr></table>';
 
-                app.innerHTML = `
-                    <div class="max-w-4xl mx-auto w-full p-4 sm:p-6 flex-grow flex flex-col justify-between">
-                        <div>
-                            <!-- Pasek postępu -->
-                            <div class="mb-8">
-                                <div class="flex justify-between items-center mb-3 text-xs uppercase tracking-wider text-zinc-400 font-semibold">
-                                    <span>Kategoria ${state.currentCategoryIndex + 1} z ${totalCats}</span>
-                                    <span>${Math.round(progressPercent)}% ukończono</span>
-                                </div>
-                                <div class="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-zinc-800 mb-6">
-                                    <div class="bg-gradient-to-r from-gold-600 to-gold-400 h-full transition-all duration-300" style="width: ${progressPercent}%"></div>
-                                </div>
-                                <div class="flex justify-center gap-2 sm:gap-3">${dotsHtml}</div>
-                            </div>
-
-                            <!-- Nagłówek kategorii -->
-                            <div class="text-center mb-8">
-                                <h2 class="text-2xl sm:text-4xl font-extrabold text-white mb-2">${cat.name}</h2>
-                                <p class="text-zinc-400 text-sm sm:text-base">${cat.description}</p>
-                            </div>
-
-                            <!-- Siatka nominowanych -->
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                                ${nomineesHtml}
-                            </div>
+                screen.innerHTML = `
+                    <div>
+                        <div style="background-color: #000033; padding: 6px; border: 2px inset #808080; margin-bottom: 10px; display: flex; justify-content: space-between; font-family: 'Courier New', monospace; font-size: 13px;">
+                            <span>KATEGORIA: <b>${state.currentCategoryIndex + 1} / ${total}</b></span>
+                            <span style="color: #00FF00;">POSTĘP: ${Math.round(((state.currentCategoryIndex + 1) / total) * 100)}%</span>
                         </div>
 
-                        <!-- Przyciski nawigacji -->
-                        <div class="flex justify-between items-center pt-4 border-t border-zinc-900">
-                            <button onclick="prevCategory()" class="px-5 py-2.5 rounded-xl border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-sm font-semibold transition-all cursor-pointer ${state.currentCategoryIndex === 0 ? 'invisible' : ''}">
-                                ← Wstecz
-                            </button>
-                            <button onclick="nextCategory()" class="px-6 py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-zinc-950 text-sm font-bold shadow-md shadow-gold-500/10 transition-all cursor-pointer ${!selectedNomineeId ? 'opacity-50 cursor-not-allowed' : ''}">
-                                ${state.currentCategoryIndex === totalCats - 1 ? 'Podsumowanie Głosu →' : 'Dalej →'}
+                        <div style="text-align: center; margin-bottom: 10px;">
+                            <h2 style="color: #FFCC00; margin: 5px 0;">${cat.name}</h2>
+                            <p style="font-size: 13px; color: #CCCCCC; margin: 0;">${cat.description}</p>
+                        </div>
+
+                        ${nomineesHtml}
+
+                        <div style="display: flex; justify-content: space-between; margin-top: 15px; border-top: 2px groove #808080; padding-top: 10px;">
+                            <button class="retro-btn-small" onclick="prevCategory()">&lt;&lt; WSTECZ</button>
+                            <button class="retro-btn-small" style="background-color: ${selectedId ? '#FFCC00' : '#888888'};" onclick="nextCategory()">
+                                ${state.currentCategoryIndex === total - 1 ? 'ZOBACZ KARTĘ WYNIKÓW &gt;&gt;' : 'NASTĘPNA KATEGORIA &gt;&gt;'}
                             </button>
                         </div>
                     </div>
                 `;
-            } else if (state.step === 'summary') {
-                let summaryItemsHtml = '';
-                categories.forEach((cat, index) => {
-                    const nomineeId = state.votes[cat.id];
-                    const nominee = cat.nominees.find(n => n.id === nomineeId);
-                    
-                    summaryItemsHtml += `
-                        <div class="p-4 rounded-xl bg-zinc-900/60 border border-zinc-800/80 flex items-center justify-between gap-4">
-                            <div>
-                                <span class="text-xs uppercase tracking-wider text-gold-500 font-semibold block mb-1">Kategoria ${index + 1}: ${cat.name}</span>
-                                <h4 class="text-lg font-bold text-white">${nominee ? nominee.name : 'Brak głosu'}</h4>
-                            </div>
-                            <button onclick="goToCategory(${index})" class="px-3 py-1.5 rounded-lg border border-zinc-700 text-xs font-semibold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-all cursor-pointer">
-                                Zmień
-                            </button>
-                        </div>
+            } else if (state.view === 'summary') {
+                let rowsHtml = '';
+                categories.forEach((cat, idx) => {
+                    const nomId = state.votes[cat.id];
+                    const nom = cat.nominees.find(n => n.id === nomId);
+                    rowsHtml += `
+                        <tr>
+                            <td style="background-color: #000033; color: #FFCC00; font-weight: bold; width: 45%;">
+                                ${idx + 1}. ${cat.name}
+                            </td>
+                            <td style="background-color: #000022; color: #00FF00; font-weight: bold; font-size: 16px;">
+                                ${nom ? '🏆 ' + nom.name : '---'}
+                            </td>
+                            <td style="background-color: #000033; width: 70px; text-align: center;">
+                                <button class="retro-btn-small" onclick="editCategory(${idx})">Zmień</button>
+                            </td>
+                        </tr>
                     `;
                 });
 
-                app.innerHTML = `
-                    <div class="max-w-2xl mx-auto w-full p-4 sm:p-6 flex-grow flex flex-col justify-between">
-                        <div>
-                            <div class="text-center mb-8">
-                                <span class="text-xs uppercase tracking-widest text-gold-500 font-semibold mb-2 inline-block bg-gold-500/10 px-3 py-1 rounded-full border border-gold-500/20">VIP Ballot</span>
-                                <h2 class="text-3xl font-extrabold text-white mb-2">Twoje podsumowanie głosowania</h2>
-                                <p class="text-zinc-400 text-sm">Sprawdź swoje typy. Możesz jeszcze zmienić dowolny wybór lub zatwierdzić ostateczny głos.</p>
-                            </div>
-
-                            <div class="space-y-3 mb-8">
-                                ${summaryItemsHtml}
-                            </div>
+                screen.innerHTML = `
+                    <div id="vip-ballot-card" style="background-color: #000022; border: 4px double #FFCC00; padding: 12px;">
+                        <div style="text-align: center; border-bottom: 2px solid #FFCC00; padding-bottom: 8px; margin-bottom: 10px;">
+                            <span style="background-color: #FF0000; color: #FFF; padding: 2px 6px; font-size: 11px; font-weight: bold;">OFICJALNA KARTA GŁOSOWANIA</span>
+                            <h2 style="color: #FFFF00; margin: 6px 0 2px 0;">SKIBIDI AWARDS 2006 - MOJE TYPY</h2>
+                            <span style="font-size: 11px; color: #AAAAAA; font-family: 'Courier New', monospace;">Zrób PrintScreen (PrtScn) i wklej w Painta!</span>
                         </div>
 
-                        <div class="space-y-3 pt-4 border-t border-zinc-900">
-                            <button onclick="submitVotes()" class="w-full py-4 bg-gradient-to-r from-gold-500 to-amber-600 hover:from-gold-400 hover:to-amber-500 text-zinc-950 font-bold rounded-xl shadow-lg shadow-gold-500/20 transition-all cursor-pointer">
-                                ZATWIERDZ I WYŚLIJ GŁOSY
-                            </button>
-                            <button onclick="copySummary()" class="w-full py-3 rounded-xl border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700 text-sm font-semibold transition-all cursor-pointer">
-                                Kopiuj podsumowanie do schowka
-                            </button>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            ${rowsHtml}
+                        </table>
+
+                        <div style="text-align: center; margin-top: 12px; font-size: 12px; color: #00FFFF; font-family: 'Courier New', monospace;">
+                            Wygenerowano na: skibidiawards2006.prv.pl
                         </div>
                     </div>
-                `;
-            } else if (state.step === 'success') {
-                app.innerHTML = `
-                    <div class="flex-grow flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto">
-                        <div class="w-20 h-20 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 text-3xl mb-6 shadow-xl">
-                            🎉
-                        </div>
-                        <h2 class="text-3xl font-extrabold text-white mb-3">Głosy zostały zarejestrowane!</h2>
-                        <p class="text-zinc-400 text-sm mb-8">Dziękujemy za wzięcie udziału w plebiscycie. Twój głos ma znaczenie!</p>
-                        <button onclick="resetApp()" class="px-6 py-3 rounded-xl border border-zinc-800 text-zinc-400 hover:text-white text-sm font-semibold transition-all cursor-pointer">
-                            Zagłosuj ponownie
-                        </button>
+
+                    <div style="text-align: center; margin-top: 12px;">
+                        <button class="retro-btn-small" onclick="copyVotes()">📋 KOPIUJ WYNIKI DO SCHOWKA (NA GG)</button>
+                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĘ GŁÓWNĄ</button>
                     </div>
                 `;
             }
         }
 
+        function showHome() {
+            state.view = 'home';
+            render();
+        }
+
         function startVoting() {
-            state.step = 'voting';
+            state.view = 'voting';
             state.currentCategoryIndex = 0;
             render();
         }
 
-        function voteForNominee(catId, nomineeId) {
-            state.votes[catId] = nomineeId;
+        function selectNominee(catId, nomId) {
+            state.votes[catId] = nomId;
             render();
         }
 
         function nextCategory() {
             const cat = categories[state.currentCategoryIndex];
-            if (!state.votes[cat.id]) return; // Wymóg zaznaczenia
-
+            if (!state.votes[cat.id]) {
+                alert("Musisz najpierw wybrać swojego faworyta w tej kategorii!");
+                return;
+            }
             if (state.currentCategoryIndex < categories.length - 1) {
                 state.currentCategoryIndex++;
                 render();
             } else {
-                state.step = 'summary';
+                state.view = 'summary';
                 render();
             }
         }
@@ -299,41 +483,32 @@
                 state.currentCategoryIndex--;
                 render();
             } else {
-                state.step = 'intro';
+                state.view = 'home';
                 render();
             }
         }
 
-        function goToCategory(index) {
+        function editCategory(index) {
             state.currentCategoryIndex = index;
-            state.step = 'voting';
+            state.view = 'voting';
             render();
         }
 
-        function submitVotes() {
-            state.step = 'success';
-            render();
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
-            }
-        }
-
-        function copySummary() {
-            let text = "✨ Moje typy na Streamer Awards:\n";
-            categories.forEach((cat, index) => {
-                const nomId = state.votes[cat.id];
-                const nom = cat.nominees.find(n => n.id === nomId);
-                text += `${index + 1}. ${cat.name}: ${nom ? nom.name : 'Brak'}\n`;
+        function copyVotes() {
+            let text = "=== MOJE TYPY - SKIBIDI AWARDS 2006 ===\n";
+            categories.forEach((cat, idx) => {
+                const nom = cat.nominees.find(n => n.id === state.votes[cat.id]);
+                text += `${idx + 1}. ${cat.name}: ${nom ? nom.name : 'Brak'}\n`;
             });
             navigator.clipboard.writeText(text);
-            alert("Skopiowano podsumowanie do schowka!");
+            alert("Skopiowano Twoje typy! Możesz teraz wkleić je znajomym na Gadu-Gadu!");
         }
 
-        // Start aplikacji
+        function alertPlaceholder(name) {
+            alert("Sekcja '" + name + "' jest w budowie (Under Construction)! Dodamy ją później.");
+        }
+
+        // Start
         render();
     </script>
 </body>
