@@ -56,8 +56,8 @@
             box-sizing: border-box;
         }
 
-        /* Warstwa wchodząca: gwiazda otwiera się w stałych granicach kontenera */
-        #incoming-box {
+        /* 1. PRZEJŚCIE DO PRZODU: Gwiazda Movie Maker */
+        #incoming-box.star-mode {
             z-index: 10;
             pointer-events: none;
             clip-path: polygon(
@@ -67,7 +67,7 @@
             transition: clip-path 1.1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        #incoming-box.star-wipe-open {
+        #incoming-box.star-mode.star-wipe-open {
             clip-path: polygon(
                 50% -180%, 82% -45%, 240% -45%, 122% 52%, 175% 210%,
                 50% 115%, -75% 210%, -22% 52%, -140% -45%, 18% -45%
@@ -75,7 +75,73 @@
             pointer-events: auto;
         }
 
-        /* Uniwersalny box dla każdej zawartości (stała szerokość, brak przeskoków) */
+        /* 2. PRZEJŚCIE POWROTU: Mozaika / Pikselizacja Windows XP */
+        @keyframes mosaicDisintegrate {
+            0% {
+                filter: blur(0px) contrast(100%) brightness(100%);
+                transform: scale(1);
+                opacity: 1;
+            }
+            45% {
+                filter: blur(10px) contrast(220%) brightness(140%) saturate(200%);
+                transform: scale(0.97);
+                opacity: 0.75;
+            }
+            100% {
+                filter: blur(22px) contrast(300%) brightness(180%);
+                transform: scale(0.93);
+                opacity: 0;
+            }
+        }
+
+        @keyframes mosaicReassemble {
+            0% {
+                filter: blur(22px) contrast(300%) brightness(180%);
+                transform: scale(0.93);
+                opacity: 0;
+            }
+            55% {
+                filter: blur(8px) contrast(190%) brightness(130%);
+                transform: scale(0.98);
+                opacity: 0.85;
+            }
+            100% {
+                filter: blur(0px) contrast(100%) brightness(100%);
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .mosaic-out {
+            animation: mosaicDisintegrate 0.45s steps(6, end) forwards;
+            pointer-events: none;
+        }
+
+        .mosaic-in {
+            animation: mosaicReassemble 0.5s steps(7, end) forwards;
+        }
+
+        /* Siatka pikseli nakładana na czas mozaiki */
+        #mosaic-grid-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            pointer-events: none;
+            display: none;
+            background-image: 
+                linear-gradient(to right, rgba(0, 255, 255, 0.25) 2px, transparent 2px),
+                linear-gradient(to bottom, rgba(0, 255, 255, 0.25) 2px, transparent 2px);
+            background-size: 28px 28px;
+        }
+
+        #mosaic-grid-overlay.active {
+            display: block;
+        }
+
+        /* Uniwersalny box dla każdej zawartości */
         .portal-box {
             width: 100%;
             box-sizing: border-box;
@@ -308,7 +374,7 @@
         </video>
     </div>
 
-    <!-- Dźwięki przejściowe -->
+    <!-- Dźwięki przejściowe do przodu (gwiazdka) -->
     <audio id="sfx-1" preload="auto">
         <source src="slimakajki/dzwiek1.mp3" type="audio/mpeg">
     </audio>
@@ -316,10 +382,16 @@
         <source src="slimakajki/dzwiek2.mp3" type="audio/mpeg">
     </audio>
 
+    <!-- Dźwięk powrotu (mozaika XP) - wrzuć plik dzwiek_powrotu.mp3 do folderu slimakajki -->
+    <audio id="sfx-return" preload="auto">
+        <source src="slimakajki/dzwiek_powrotu.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Centralna scena trzymająca idealnie wymiarowane okienko -->
     <div id="stage-wrapper">
         <div id="current-box"></div>
         <div id="incoming-box"></div>
+        <div id="mosaic-grid-overlay"></div>
     </div>
 
     <!-- Firebase SDK -->
@@ -476,6 +548,24 @@
             }
         }
 
+        function playReturnSound() {
+            ensureFishAudioPlaying();
+            const sfxReturn = document.getElementById('sfx-return');
+            if (sfxReturn) {
+                sfxReturn.currentTime = 0;
+                sfxReturn.volume = 0.9;
+                sfxReturn.play().catch(() => {
+                    // Fallback na dźwięk 2 jeśli dzwiek_powrotu.mp3 jeszcze nie istnieje
+                    const fallback = document.getElementById('sfx-2');
+                    if (fallback) {
+                        fallback.currentTime = 0;
+                        fallback.volume = 0.8;
+                        fallback.play().catch(() => {});
+                    }
+                });
+            }
+        }
+
         function buildHtmlForCurrentState() {
             if (state.view === 'rules') {
                 return `
@@ -571,7 +661,9 @@
                         ${gridHtml}
 
                         <div style="display: flex; justify-content: space-between; margin-top: 12px; border-top: 2px groove #808080; padding-top: 10px;">
-                            <button class="retro-btn-small" onclick="showRules()">&lt;&lt; REGULAMIN</button>
+                            <button class="retro-btn-small" onclick="prevCategory()">
+                                ${state.currentCategoryIndex === 0 ? '&lt;&lt; REGULAMIN' : '&lt;&lt; POPRZEDNIA KATEGORIA'}
+                            </button>
                             <button class="retro-btn-small" style="background-color: ${selectedId ? '#FFCC00' : '#888888'}; font-size: 14px;" onclick="nextCategory()">
                                 ${state.currentCategoryIndex === total - 1 ? 'ZOBACZ KARTĘ WYNIKÓW &gt;&gt;' : 'NASTĘPNA KATEGORIA &gt;&gt;'}
                             </button>
@@ -773,10 +865,13 @@
         }
 
         function render() {
-            document.getElementById('current-box').innerHTML = buildHtmlForCurrentState();
-            document.getElementById('current-box').style.display = 'block';
+            const currentBox = document.getElementById('current-box');
+            currentBox.innerHTML = buildHtmlForCurrentState();
+            currentBox.style.display = 'block';
+            currentBox.classList.remove('mosaic-out', 'mosaic-in');
         }
 
+        // 1. PRZEJŚCIE DO PRZODU: Gwiazdka Movie Maker
         function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
@@ -791,6 +886,7 @@
             updateStateCallback();
             incomingBox.innerHTML = buildHtmlForCurrentState();
 
+            incomingBox.classList.add('star-mode');
             incomingBox.classList.remove('star-wipe-open');
             void incomingBox.offsetWidth;
 
@@ -800,7 +896,7 @@
                 render();
 
                 incomingBox.style.transition = 'none';
-                incomingBox.classList.remove('star-wipe-open');
+                incomingBox.classList.remove('star-mode', 'star-wipe-open');
                 incomingBox.innerHTML = '';
                 void incomingBox.offsetWidth;
                 incomingBox.style.transition = '';
@@ -808,18 +904,72 @@
             }, 1100);
         }
 
+        // 2. PRZEJŚCIE POWROTU: Mozaika / Pikselizacja Windows XP
+        function runMosaicReturnWipe(updateStateCallback) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+
+            playReturnSound();
+
+            const currentBox = document.getElementById('current-box');
+            const gridOverlay = document.getElementById('mosaic-grid-overlay');
+
+            // Włączamy siatkę pikseli i rozbijamy stary obraz w mozaikę
+            gridOverlay.classList.add('active');
+            currentBox.classList.remove('mosaic-in');
+            currentBox.classList.add('mosaic-out');
+
+            // W połowie animacji podmieniamy treść i składamy z pikseli nowy widok
+            setTimeout(() => {
+                updateStateCallback();
+                currentBox.innerHTML = buildHtmlForCurrentState();
+                currentBox.classList.remove('mosaic-out');
+                void currentBox.offsetWidth;
+                currentBox.classList.add('mosaic-in');
+            }, 450);
+
+            // Kończymy i czyścimy klasy
+            setTimeout(() => {
+                currentBox.classList.remove('mosaic-in');
+                gridOverlay.classList.remove('active');
+                isTransitioning = false;
+            }, 950);
+        }
+
+        // Nawigacja POWROTU / COFANIA używa Mozaiki Windows XP
         function showHome() {
-            runBoxedStarWipe(() => {
+            if (state.view === 'home') return;
+            runMosaicReturnWipe(() => {
                 state.view = 'home';
             });
         }
 
         function showRules() {
-            runBoxedStarWipe(() => {
+            runMosaicReturnWipe(() => {
                 state.view = 'rules';
             });
         }
 
+        function prevCategory() {
+            if (state.currentCategoryIndex > 0) {
+                runMosaicReturnWipe(() => {
+                    state.currentCategoryIndex--;
+                });
+            } else {
+                runMosaicReturnWipe(() => {
+                    state.view = 'rules';
+                });
+            }
+        }
+
+        function editCategory(index) {
+            runMosaicReturnWipe(() => {
+                state.currentCategoryIndex = index;
+                state.view = 'voting';
+            });
+        }
+
+        // Nawigacja DO PRZODU używa Gwiazdki Movie Maker
         function showDownload() {
             runBoxedStarWipe(() => {
                 state.view = 'download';
@@ -859,25 +1009,6 @@
                     state.view = 'summary';
                 });
             }
-        }
-
-        function prevCategory() {
-            if (state.currentCategoryIndex > 0) {
-                runBoxedStarWipe(() => {
-                    state.currentCategoryIndex--;
-                });
-            } else {
-                runBoxedStarWipe(() => {
-                    state.view = 'rules';
-                });
-            }
-        }
-
-        function editCategory(index) {
-            runBoxedStarWipe(() => {
-                state.currentCategoryIndex = index;
-                state.view = 'voting';
-            });
         }
 
         function copyVotes() {
