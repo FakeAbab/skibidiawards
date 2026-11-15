@@ -321,7 +321,7 @@
         </video>
     </div>
 
-    <!-- Dźwięki do przodu (zgodnie z życzeniem bez zmian) -->
+    <!-- Dźwięki do przodu (bez zmian) -->
     <audio id="sfx-1" preload="auto">
         <source src="slimakajki/dzwiek1.mp3" type="video/mp4">
     </audio>
@@ -329,16 +329,10 @@
         <source src="slimakajki/dzwiek2.mp3" type="video/mp4">
     </audio>
 
-    <!-- Trzy dźwięki powrotu (używane cyklicznie z plików powrot1, powrot2, powrot3) -->
-    <audio id="ret-sound-1" preload="auto">
-        <source src="slimakajki/powrot1.mp4" type="video/mp4">
-    </audio>
-    <audio id="ret-sound-2" preload="auto">
-        <source src="slimakajki/powrot2.mp4" type="video/mp4">
-    </audio>
-    <audio id="ret-sound-3" preload="auto">
-        <source src="slimakajki/powrot3.mp4" type="video/mp4">
-    </audio>
+    <!-- Niewidoczne ukryte odtwarzacze wideo dla powrotów powrot1, powrot2, powrot3 (działają idealnie jako audio) -->
+    <video id="ret-vid-1" preload="auto" style="display:none;"><source src="slimakajki/powrot1.mp4" type="video/mp4"></video>
+    <video id="ret-vid-2" preload="auto" style="display:none;"><source src="slimakajki/powrot2.mp4" type="video/mp4"></video>
+    <video id="ret-vid-3" preload="auto" style="display:none;"><source src="slimakajki/powrot3.mp4" type="video/mp4"></video>
 
     <!-- Centralna scena trzymająca idealnie wymiarowane okienko -->
     <div id="stage-wrapper">
@@ -443,7 +437,7 @@
 
         let realVisitCount = 'ŁADOWANIE';
         let sfxToggle = 0;
-        let returnSoundIndex = 1; // Cykliczny licznik dla powrotu (1 -> 2 -> 3 -> 1)
+        let returnIndex = 1; // Cykliczny licznik powrotu: 1 -> 2 -> 3 -> 1
         let isTransitioning = false;
 
         async function updateRealVisitCounter() {
@@ -498,23 +492,23 @@
             if (sfx) {
                 sfx.currentTime = 0;
                 sfx.volume = 0.9;
-                sfx.play().catch(e => console.log("Brak pliku dźwiękowego lub blokada autoplay:", e));
+                sfx.play().catch(e => console.log("Brak pliku dźwiękowego:", e));
             }
         }
 
-        // Cykliczne odtwarzanie dźwięków powrotu (powrot1, powrot2, powrot3)
+        // Cykliczne odtwarzanie dźwięków powrotu z plików powrot1.mp4, powrot2.mp4, powrot3.mp4
         function playReturnCyclingSound() {
             ensureFishAudioPlaying();
-            const soundId = `ret-sound-${returnSoundIndex}`;
-            const sfx = document.getElementById(soundId);
+            const vidId = `ret-vid-${returnIndex}`;
+            const vidEl = document.getElementById(vidId);
             
-            // Przejdź do następnego pliku powrotu na zmianę (1 -> 2 -> 3 -> 1)
-            returnSoundIndex = returnSoundIndex >= 3 ? 1 : returnSoundIndex + 1;
+            // Przejdź do następnego pliku na zmianę (1 -> 2 -> 3 -> 1)
+            returnIndex = returnIndex >= 3 ? 1 : returnIndex + 1;
 
-            if (sfx) {
-                sfx.currentTime = 0;
-                sfx.volume = 1.0;
-                sfx.play().catch(e => console.log("Brak pliku powrotu lub blokada autoplay:", e));
+            if (vidEl) {
+                vidEl.currentTime = 0;
+                vidEl.volume = 1.0;
+                vidEl.play().catch(e => console.log("Brak pliku powrotu:", e));
             }
         }
 
@@ -822,7 +816,7 @@
             currentBox.style.display = 'block';
         }
 
-        // 1. PRZEJŚCIE DO PRZODU: Gwiazdka Movie Maker + stare dźwięki
+        // 1. PRZEJŚCIE DO PRZODU: Gwiazdka Movie Maker
         function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
@@ -855,7 +849,7 @@
             }, 1100);
         }
 
-        // 2. PRZEJŚCIE POWROTU / COFANIA: Ukośny slide + cykliczne audio z powrot1, powrot2, powrot3
+        // 2. PRZEJŚCIE POWROTU: Ukośny slide + cykliczne odtwarzanie powrot1.mp4, powrot2.mp4, powrot3.mp4
         function runSlideReturnWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
@@ -888,7 +882,7 @@
             }, 580);
         }
 
-        // Nawigacja POWROTU / COFANIA (Ukośny Slide + Audio z powrot1/2/3)
+        // Nawigacja POWROTU / COFANIA
         function showHome() {
             if (state.view === 'home') return;
             runSlideReturnWipe(() => {
@@ -921,7 +915,7 @@
             });
         }
 
-        // Nawigacja DO PRZODU (Gwiazdka Movie Maker)
+        // Nawigacja DO PRZODU
         function showDownload() {
             runBoxedStarWipe(() => {
                 state.view = 'download';
