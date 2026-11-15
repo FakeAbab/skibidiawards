@@ -75,7 +75,7 @@
             pointer-events: auto;
         }
 
-        /* 2. PRZEJŚCIE POWROTU: Ukośny slide z prawego górnego do lewego dolnego rogu (~0.6s) */
+        /* 2. PRZEJŚCIE POWROTU: Ukośny slide z prawego górnego do lewego dolnego rogu (~0.58s) */
         #incoming-box.slide-mode {
             z-index: 10;
             pointer-events: none;
@@ -321,15 +321,23 @@
         </video>
     </div>
 
-    <!-- Trzy pliki dźwiękowe (wideo) używane cyklicznie na zmianę -->
-    <audio id="sound-1" preload="auto">
-        <source src="slimakajki/video_1.mp4" type="video/mp4">
+    <!-- Dźwięki do przodu (zgodnie z życzeniem bez zmian) -->
+    <audio id="sfx-1" preload="auto">
+        <source src="slimakajki/dzwiek1.mp3" type="video/mp4">
     </audio>
-    <audio id="sound-2" preload="auto">
-        <source src="slimakajki/video_2.mp4" type="video/mp4">
+    <audio id="sfx-2" preload="auto">
+        <source src="slimakajki/dzwiek2.mp3" type="video/mp4">
     </audio>
-    <audio id="sound-3" preload="auto">
-        <source src="slimakajki/video_3.mp4" type="video/mp4">
+
+    <!-- Trzy dźwięki powrotu (używane cyklicznie z plików powrot1, powrot2, powrot3) -->
+    <audio id="ret-sound-1" preload="auto">
+        <source src="slimakajki/powrot1.mp4" type="video/mp4">
+    </audio>
+    <audio id="ret-sound-2" preload="auto">
+        <source src="slimakajki/powrot2.mp4" type="video/mp4">
+    </audio>
+    <audio id="ret-sound-3" preload="auto">
+        <source src="slimakajki/powrot3.mp4" type="video/mp4">
     </audio>
 
     <!-- Centralna scena trzymająca idealnie wymiarowane okienko -->
@@ -434,7 +442,8 @@
         };
 
         let realVisitCount = 'ŁADOWANIE';
-        let soundIndex = 1; // Cykliczny licznik dla 3 dźwięków (1 -> 2 -> 3 -> 1)
+        let sfxToggle = 0;
+        let returnSoundIndex = 1; // Cykliczny licznik dla powrotu (1 -> 2 -> 3 -> 1)
         let isTransitioning = false;
 
         async function updateRealVisitCounter() {
@@ -479,19 +488,33 @@
 
         document.addEventListener('click', ensureFishAudioPlaying, { once: true });
 
-        // Cykliczne odtwarzanie jednego z trzech dźwięków (video_1, video_2, video_3)
-        function playCyclingSound() {
+        // Dźwięki do przodu (bez zmian)
+        function playAlternatingTransitionSound() {
             ensureFishAudioPlaying();
-            const soundId = `sound-${soundIndex}`;
-            const sfx = document.getElementById(soundId);
-            
-            // Przejdź do następnego dźwięku na zmianę (1 -> 2 -> 3 -> 1)
-            soundIndex = soundIndex >= 3 ? 1 : soundIndex + 1;
+            const audioId = sfxToggle === 0 ? 'sfx-1' : 'sfx-2';
+            sfxToggle = sfxToggle === 0 ? 1 : 0;
 
+            const sfx = document.getElementById(audioId);
             if (sfx) {
                 sfx.currentTime = 0;
                 sfx.volume = 0.9;
                 sfx.play().catch(e => console.log("Brak pliku dźwiękowego lub blokada autoplay:", e));
+            }
+        }
+
+        // Cykliczne odtwarzanie dźwięków powrotu (powrot1, powrot2, powrot3)
+        function playReturnCyclingSound() {
+            ensureFishAudioPlaying();
+            const soundId = `ret-sound-${returnSoundIndex}`;
+            const sfx = document.getElementById(soundId);
+            
+            // Przejdź do następnego pliku powrotu na zmianę (1 -> 2 -> 3 -> 1)
+            returnSoundIndex = returnSoundIndex >= 3 ? 1 : returnSoundIndex + 1;
+
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.volume = 1.0;
+                sfx.play().catch(e => console.log("Brak pliku powrotu lub blokada autoplay:", e));
             }
         }
 
@@ -617,7 +640,7 @@
                             <span style="font-size: 13px; color: #FFFF00;">Głosowanie jest całkowicie darmowe (nie trzeba wysyłać SMS-a za 9zł + VAT).</span>
                         </div>
 
-                        <button class="retro-btn" onclick="startVoting()">&gt;&gt; PRZEJDŹ DO GŁOSOWANIA &lt;&lt;</button>
+                        <button class="retro-btn" onclick="startVoting()">&gt;&gt; KLIKNIJ TUTAJ ABY GŁOSOWAĆ &lt;&lt;</button>
 
                         <div class="placeholder-banner">
                             <b>[ SEKCJA DO UZUPEŁNIENIA / PLACEHOLDER ]</b><br><br>
@@ -706,7 +729,7 @@
 
                     <div style="text-align: center; margin-top: 12px;">
                         <button class="retro-btn-small" onclick="copyVotes()">📋 KOPIUJ WYNIKI DO SCHOWKA (NA GG)</button>
-                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĄ GŁÓWNĄ</button>
+                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĘ GŁÓWNĄ</button>
                     </div>
                 `;
             }
@@ -799,12 +822,12 @@
             currentBox.style.display = 'block';
         }
 
-        // 1. PRZEJŚCIE DO PRZODU: Oryginalna gwiazdka Movie Maker
+        // 1. PRZEJŚCIE DO PRZODU: Gwiazdka Movie Maker + stare dźwięki
         function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
-            playCyclingSound();
+            playAlternatingTransitionSound();
 
             const currentBox = document.getElementById('current-box');
             const incomingBox = document.getElementById('incoming-box');
@@ -832,12 +855,12 @@
             }, 1100);
         }
 
-        // 2. PRZEJŚCIE POWROTU / COFANIA: Ukośny slide z 3 dźwiękami cyklicznymi (~0.58s)
+        // 2. PRZEJŚCIE POWROTU / COFANIA: Ukośny slide + cykliczne audio z powrot1, powrot2, powrot3
         function runSlideReturnWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
-            playCyclingSound();
+            playReturnCyclingSound();
 
             const currentBox = document.getElementById('current-box');
             const incomingBox = document.getElementById('incoming-box');
@@ -865,7 +888,7 @@
             }, 580);
         }
 
-        // Nawigacja POWROTU / COFANIA (Ukośny Slide + 3 dźwięki)
+        // Nawigacja POWROTU / COFANIA (Ukośny Slide + Audio z powrot1/2/3)
         function showHome() {
             if (state.view === 'home') return;
             runSlideReturnWipe(() => {
@@ -898,7 +921,7 @@
             });
         }
 
-        // Nawigacja DO PRZODU (Oryginalna gwiazdka Movie Maker)
+        // Nawigacja DO PRZODU (Gwiazdka Movie Maker)
         function showDownload() {
             runBoxedStarWipe(() => {
                 state.view = 'download';
