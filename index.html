@@ -38,7 +38,7 @@
             object-fit: cover;
         }
 
-        /* Centralny kontener strony na środku */
+        /* Główny kontener strony na środku */
         #main-stage {
             position: relative;
             z-index: 1;
@@ -46,14 +46,14 @@
             margin: 0 auto;
         }
 
-        /* Warstwa nakładki animacji gwiazdy (wyświetlana tylko podczas przejścia) */
+        /* Nakładka przejścia gwiazdy (zawsze na wierzchu podczas animacji) */
         #wipe-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 9999;
+            z-index: 99999;
             display: flex;
             justify-content: center;
             align-items: flex-start;
@@ -76,14 +76,13 @@
         }
 
         #wipe-overlay.active.open {
-            /* Koniec: gwiazda rozszerza się na cały ekran/kontener */
+            /* Koniec: gwiazda wypełnia cały kontener */
             clip-path: polygon(
                 50% -180%, 82% -45%, 240% -45%, 122% 52%, 175% 210%,
                 50% 115%, -75% 210%, -22% 52%, -140% -45%, 18% -45%
             );
         }
 
-        /* Wewnętrzna zawartość nakładki (musi trzymać dokładnie taki sam układ centrowania jak strona główna) */
         #wipe-content-wrapper {
             width: 100%;
             display: flex;
@@ -328,7 +327,7 @@
         </video>
     </div>
 
-    <!-- Dźwięki przejściowe odtwarzane na zmianę -->
+    <!-- Dźwięki przejściowe -->
     <audio id="sfx-1" preload="auto">
         <source src="slimakajki/dzwiek1.mp3" type="audio/mpeg">
     </audio>
@@ -336,15 +335,15 @@
         <source src="slimakajki/dzwiek2.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Główna scena z treścią -->
+    <!-- Główna scena -->
     <div id="main-stage"></div>
 
-    <!-- Nakładka wykonująca czyste przejście gwiazdy -->
+    <!-- Nakładka gwiazdy -->
     <div id="wipe-overlay">
         <div id="wipe-content-wrapper"></div>
     </div>
 
-    <!-- Firebase SDK (v10 modular) -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, push, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
@@ -707,7 +706,7 @@
 
                     <div style="text-align: center; margin-top: 12px;">
                         <button class="retro-btn-small" onclick="copyVotes()">📋 KOPIUJ WYNIKI DO SCHOWKA (NA GG)</button>
-                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĄ GŁÓWNĄ</button>
                     </div>
                 `;
             }
@@ -798,31 +797,33 @@
             document.getElementById('main-stage').innerHTML = buildHtmlForCurrentState();
         }
 
-        // Płynne przejście: nowa treść startuje w nakładce gwiazdy, po czym płynnie wskakuje na główny stage
+        // Pancerne przejście: stary ekran znika natychmiast, gwiazda pokazuje nowy, po czym nakładka znika bez śladu
         function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
             playAlternatingTransitionSound();
 
+            const mainStage = document.getElementById('main-stage');
             const overlay = document.getElementById('wipe-overlay');
             const wipeContent = document.getElementById('wipe-content-wrapper');
 
-            // 1. Zmieniamy stan w tle (główny stage jeszcze trzyma stary widok, więc nic nie mruga)
-            updateStateCallback();
+            // 1. Natychmiast czścimy stary widok z głównej sceny, żeby nie wisiał pod spodem
+            mainStage.innerHTML = '';
 
-            // 2. Wrzucamy NOWY HTML do nakładki gwiazdy
+            // 2. Aktualizujemy stan i wstrzykujemy nowy HTML do nakładki gwiazdy
+            updateStateCallback();
             wipeContent.innerHTML = buildHtmlForCurrentState();
 
-            // 3. Odpalamy animację gwiazdy
+            // 3. Odpalamy animację otwarcia gwiazdy
             overlay.classList.add('active');
             overlay.classList.remove('open');
             void overlay.offsetWidth;
             overlay.classList.add('open');
 
-            // 4. Gdy gwiazda się otwiera (po 1.1s), aktualizujemy główny widok i chowamy nakładkę
+            // 4. Po zakończeniu animacji (1.1s) przenosimy nową treść na główną scenę i gasimy nakładku
             setTimeout(() => {
-                render(); // główne tło ma już nowy widok pod spodem
+                render(); // ląduje na głównym stage
 
                 overlay.style.transition = 'none';
                 overlay.classList.remove('active', 'open');
