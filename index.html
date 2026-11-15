@@ -10,13 +10,16 @@
             color: #FFFF00;
             font-family: "Times New Roman", Times, serif;
             margin: 0;
-            padding: 10px;
+            padding: 12px;
             position: relative;
             min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
-        /* Tło z zapętlonym wideo rybek */
+        /* Tło z zapętlonym wideo rybek - nietknięte podczas przejść */
         #bg-video-container {
             position: fixed;
             top: 0;
@@ -35,42 +38,38 @@
             object-fit: cover;
         }
 
-        /* Warstwa aktualnego ekranu */
-        #app-root {
+        /* Centralna scena trzymająca wyłącznie kontener strony na środku */
+        #stage-wrapper {
             position: relative;
             z-index: 1;
-            transition: filter 0.4s ease;
+            display: grid;
+            place-items: start center;
+            max-width: 100%;
+            margin: 0 auto;
         }
 
-        /* Lekkie przyciemnienie starego ekranu podczas trwania przejścia */
-        #app-root.dimmed-during-wipe {
-            filter: brightness(0.45);
-        }
-
-        /* Nakładka do przejścia Windows Movie Maker (Star Iris Wipe) */
-        #transition-incoming-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 5000;
-            overflow-y: auto;
-            padding: 10px;
+        #current-box,
+        #incoming-box {
+            grid-area: 1 / 1;
+            width: 100%;
             box-sizing: border-box;
+        }
+
+        /* Warstwa wchodząca: gwiazda ogranicza się do obrębu centralnego kontenera */
+        #incoming-box {
+            z-index: 10;
             pointer-events: none;
-            filter: drop-shadow(0 0 12px #FFCC00);
             clip-path: polygon(
                 50% 48%, 50.6% 49.4%, 52% 49.4%, 50.9% 50.3%, 51.3% 51.7%,
                 50% 50.8%, 48.7% 51.7%, 49.1% 50.3%, 48% 49.4%, 49.4% 49.4%
             );
-            transition: clip-path 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: clip-path 1.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        #transition-incoming-layer.star-wipe-open {
+        #incoming-box.star-wipe-open {
             clip-path: polygon(
-                50% -280%, 85% -60%, 290% -60%, 130% 55%, 190% 250%,
-                50% 130%, -90% 250%, -30% 55%, -190% -60%, 15% -60%
+                50% -180%, 82% -45%, 240% -45%, 122% 52%, 175% 210%,
+                50% 115%, -75% 210%, -22% 52%, -140% -45%, 18% -45%
             );
         }
 
@@ -79,23 +78,24 @@
             width: 850px;
             max-width: 100%;
             margin: 0 auto;
-            background-color: rgba(0, 0, 102, 0.92);
+            background-color: rgba(0, 0, 102, 0.94);
             border: 4px ridge #C0C0C0;
             border-collapse: separate;
             border-spacing: 6px;
             position: relative;
         }
 
-        /* Szeroki poziomy prostokąt dla ekranu głosowania */
+        /* Szeroki poziomy prostokąt dla ekranu głosowania i regulaminu */
         .voting-landscape-box {
             width: 1120px;
             max-width: 96vw;
-            margin: 15px auto;
-            background-color: rgba(0, 0, 85, 0.97);
+            margin: 10px auto;
+            background-color: rgba(0, 0, 85, 0.98);
             border: 5px ridge #FFCC00;
             padding: 18px 24px;
-            box-shadow: 0 0 35px rgba(0, 0, 0, 0.95);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
             position: relative;
+            box-sizing: border-box;
         }
 
         td, th {
@@ -122,7 +122,7 @@
 
         .sidebar-cell {
             width: 225px;
-            background-color: rgba(0, 0, 68, 0.95);
+            background-color: rgba(0, 0, 68, 0.96);
             font-family: Arial, Helvetica, sans-serif;
             font-size: 13px;
         }
@@ -152,7 +152,7 @@
         }
 
         .content-cell {
-            background-color: rgba(0, 0, 85, 0.95);
+            background-color: rgba(0, 0, 85, 0.96);
             color: #FFFFFF;
         }
 
@@ -319,16 +319,16 @@
         <source src="slimakajki/dzwiek2.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Główny kontener aktualnego widoku -->
-    <div id="app-root"></div>
-
-    <!-- Nakładka do przejścia typu Windows Movie Maker -->
-    <div id="transition-incoming-layer"></div>
+    <!-- Centralna scena ograniczająca przejście gwiazdy wyłącznie do pudełka na środku -->
+    <div id="stage-wrapper">
+        <div id="current-box"></div>
+        <div id="incoming-box"></div>
+    </div>
 
     <!-- Firebase SDK (v10 modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set, onValue, push, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getDatabase, ref, set, onValue, push, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA1cuClvpiH7AUkamV7KKiau6BNAlmfC88",
@@ -415,7 +415,7 @@
         ];
 
         let state = {
-            view: 'home',
+            view: 'home', // 'home', 'rules', 'voting', 'summary', 'download'
             currentCategoryIndex: 0,
             votes: {}
         };
@@ -480,6 +480,58 @@
         }
 
         function buildHtmlForCurrentState() {
+            // WIDOK 1: KARTA ZASAD PRZED GŁOSOWANIEM
+            if (state.view === 'rules') {
+                return `
+                    <div class="voting-landscape-box">
+                        <div style="background-color: #000033; padding: 6px 12px; border: 2px inset #808080; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-family: 'Courier New', monospace; font-size: 13px;">
+                            <span>★ SKIBIDI AWARDS 2006 ★ | REGULAMIN</span>
+                            <button class="retro-btn-small" onclick="showHome()">✖ WYJDŹ</button>
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <h1 class="blink" style="color: #FF0000; margin: 0 0 5px 0; font-size: 28px; text-shadow: 2px 2px #000000;">
+                                ⚠️ PRZECZYTAJ PRZED GŁOSOWANIEM ⚠️
+                            </h1>
+                            <p style="font-size: 13px; color: #00FFFF; margin: 0; font-family: 'Courier New', monospace;">Zapoznaj się z zasadami panującymi na gali, zanim oddasz swój głos!</p>
+                        </div>
+
+                        <div style="background-color: #000022; border: 3px inset #808080; padding: 15px 20px; font-size: 14px; line-height: 1.6; color: #FFFFFF;">
+                            <ol style="margin: 0; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">
+                                    <strong style="color: #FFCC00;">GŁOSOWANIE JEST PRZEZNACZONE TYLKO DLA SKIBIDI SIGM!!</strong><br>
+                                    To znaczy że liczone są tylko głosy od użytkowników serwera <span style="color: #FF6666; font-weight: bold;">Z WYŁĄCZENIEM MULTIKONT</span>.
+                                </li>
+                                <li style="margin-bottom: 10px;">
+                                    Jest jeden głos na osobę, jeżeli chcecie wprowadzić jakieś zmiany do swojej karty głosów, to pv do mn (<strong style="color: #00FFFF;">xabab</strong>). Zmiany można wprowadzać do czasu zamknięcia głosowania.
+                                </li>
+                                <li style="margin-bottom: 10px;">
+                                    Próby majstrowania przy stronie/oszukiwania/niepostępowania zgodnie z zasadami będą skutkowały <span style="color: #FF0000; font-weight: bold;">UNIEWAŻNIENIEM GŁOSU I CHUJ MNIE TO OBCHODZI</span>.
+                                </li>
+                                <li style="margin-bottom: 10px;">
+                                    <strong style="color: #FFCC00;">ZALECAM</strong> nie streamować swojego głosowania. Niektóre kategorie/wybory mogą być kontrowersyjne, a poza tym wiadomo jak działa podświadomość człowieka w takich sytuacjach, gdy kolega jest na vc. To oczywiście nie jest zakaz tylko zalecenie, więc ostatecznie róbcie co chcecie ale no.
+                                </li>
+                                <li style="margin-bottom: 5px;">
+                                    <strong style="color: #00FF00;">PAMIĘTAJCIE ŻE TO ZABAWA.</strong> To nie jest jakaś poważna gala nagród, więc proszę się nie obrażać że ktoś nie został gdzieś nominowany, albo że nie wygrał, albo jakieś inne gównodramy, bo to rozjebie cały klimat i mija się z celem przedsięwzięcia (nie wiem jak to się pisze, ale nie sprawdze XD).
+                                </li>
+                            </ol>
+                        </div>
+
+                        <!-- PRZYCISK NA DOLE -->
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="mega-download-btn" style="font-size: 17px; padding: 14px 22px;" onclick="proceedToVoting()">
+                                NIE JESTEM CWELEM I PRZECZYTAŁEM &gt;&gt;
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 15px; border-top: 2px groove #808080; padding-top: 8px; text-align: center;">
+                            <button class="retro-btn-small" onclick="showHome()">« WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // WIDOK 2: GŁOSOWANIE (6 OPCJI 2x3)
             if (state.view === 'voting') {
                 const cat = categories[state.currentCategoryIndex];
                 const total = categories.length;
@@ -525,7 +577,7 @@
                         ${gridHtml}
 
                         <div style="display: flex; justify-content: space-between; margin-top: 12px; border-top: 2px groove #808080; padding-top: 10px;">
-                            <button class="retro-btn-small" onclick="prevCategory()">&lt;&lt; POPRZEDNIA KATEGORIA</button>
+                            <button class="retro-btn-small" onclick="showRules()">&lt;&lt; REGULAMIN</button>
                             <button class="retro-btn-small" style="background-color: ${selectedId ? '#FFCC00' : '#888888'}; font-size: 14px;" onclick="nextCategory()">
                                 ${state.currentCategoryIndex === total - 1 ? 'ZOBACZ KARTĘ WYNIKÓW &gt;&gt;' : 'NASTĘPNA KATEGORIA &gt;&gt;'}
                             </button>
@@ -727,53 +779,65 @@
         }
 
         function render() {
-            document.getElementById('app-root').innerHTML = buildHtmlForCurrentState();
+            document.getElementById('current-box').innerHTML = buildHtmlForCurrentState();
         }
 
-        function runMovieMakerStarWipe(updateStateCallback) {
+        function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
             playAlternatingTransitionSound();
 
-            const appRoot = document.getElementById('app-root');
-            const incomingLayer = document.getElementById('transition-incoming-layer');
-
-            appRoot.classList.add('dimmed-during-wipe');
+            const incomingBox = document.getElementById('incoming-box');
 
             updateStateCallback();
-            incomingLayer.innerHTML = buildHtmlForCurrentState();
+            incomingBox.innerHTML = buildHtmlForCurrentState();
 
-            incomingLayer.classList.remove('star-wipe-open');
-            void incomingLayer.offsetWidth;
+            incomingBox.classList.remove('star-wipe-open');
+            void incomingBox.offsetWidth;
 
-            incomingLayer.classList.add('star-wipe-open');
+            incomingBox.classList.add('star-wipe-open');
 
             setTimeout(() => {
-                appRoot.classList.remove('dimmed-during-wipe');
                 render();
 
-                incomingLayer.style.transition = 'none';
-                incomingLayer.classList.remove('star-wipe-open');
-                incomingLayer.innerHTML = '';
-                void incomingLayer.offsetWidth;
-                incomingLayer.style.transition = '';
+                incomingBox.style.transition = 'none';
+                incomingBox.classList.remove('star-wipe-open');
+                incomingBox.innerHTML = '';
+                void incomingBox.offsetWidth;
+                incomingBox.style.transition = '';
                 isTransitioning = false;
-            }, 1200);
+            }, 1150);
         }
 
         function showHome() {
-            state.view = 'home';
-            render();
+            runBoxedStarWipe(() => {
+                state.view = 'home';
+            });
+        }
+
+        function showRules() {
+            runBoxedStarWipe(() => {
+                state.view = 'rules';
+            });
         }
 
         function showDownload() {
-            state.view = 'download';
-            render();
+            runBoxedStarWipe(() => {
+                state.view = 'download';
+            });
         }
 
+        // Kliknięcie "Głosuj" prowadzi najpierw do regulaminu!
         function startVoting() {
-            runMovieMakerStarWipe(() => {
+            runBoxedStarWipe(() => {
+                state.view = 'rules';
+            });
+        }
+
+        // Kliknięcie przycisku "Nie jestem cwelem..." przenosi do właściwego głosowania
+        function proceedToVoting() {
+            runBoxedStarWipe(() => {
                 state.view = 'voting';
                 state.currentCategoryIndex = 0;
             });
@@ -791,11 +855,11 @@
                 return;
             }
             if (state.currentCategoryIndex < categories.length - 1) {
-                runMovieMakerStarWipe(() => {
+                runBoxedStarWipe(() => {
                     state.currentCategoryIndex++;
                 });
             } else {
-                runMovieMakerStarWipe(() => {
+                runBoxedStarWipe(() => {
                     state.view = 'summary';
                 });
             }
@@ -803,17 +867,18 @@
 
         function prevCategory() {
             if (state.currentCategoryIndex > 0) {
-                runMovieMakerStarWipe(() => {
+                runBoxedStarWipe(() => {
                     state.currentCategoryIndex--;
                 });
             } else {
-                state.view = 'home';
-                render();
+                runBoxedStarWipe(() => {
+                    state.view = 'rules';
+                });
             }
         }
 
         function editCategory(index) {
-            runMovieMakerStarWipe(() => {
+            runBoxedStarWipe(() => {
                 state.currentCategoryIndex = index;
                 state.view = 'voting';
             });
