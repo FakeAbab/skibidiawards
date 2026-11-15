@@ -38,7 +38,7 @@
             object-fit: cover;
         }
 
-        /* Centralna scena trzymająca wyłącznie kontener strony na środku */
+        /* Centralna scena trzymająca kontener strony na środku */
         #stage-wrapper {
             position: relative;
             z-index: 1;
@@ -53,6 +53,14 @@
             grid-area: 1 / 1;
             width: 100%;
             box-sizing: border-box;
+        }
+
+        /* Stary ekran płynnie zanika podczas animacji, żeby się nie nakładały */
+        #current-box {
+            transition: opacity 0.5s ease-in-out;
+        }
+        #current-box.fade-out {
+            opacity: 0;
         }
 
         /* Warstwa wchodząca: gwiazda ogranicza się do obrębu centralnego kontenera */
@@ -319,7 +327,7 @@
         <source src="slimakajki/dzwiek2.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Centralna scena ograniczająca przejście gwiazdy wyłącznie do pudełka na środku -->
+    <!-- Centralna scena -->
     <div id="stage-wrapper">
         <div id="current-box"></div>
         <div id="incoming-box"></div>
@@ -415,7 +423,7 @@
         ];
 
         let state = {
-            view: 'home', // 'home', 'rules', 'voting', 'summary', 'download'
+            view: 'home',
             currentCategoryIndex: 0,
             votes: {}
         };
@@ -480,7 +488,6 @@
         }
 
         function buildHtmlForCurrentState() {
-            // WIDOK 1: KARTA ZASAD PRZED GŁOSOWANIEM
             if (state.view === 'rules') {
                 return `
                     <div class="voting-landscape-box">
@@ -517,7 +524,6 @@
                             </ol>
                         </div>
 
-                        <!-- PRZYCISK NA DOLE -->
                         <div style="text-align: center; margin-top: 20px;">
                             <button class="mega-download-btn" style="font-size: 17px; padding: 14px 22px;" onclick="proceedToVoting()">
                                 NIE JESTEM CWELEM I PRZECZYTAŁEM &gt;&gt;
@@ -531,7 +537,6 @@
                 `;
             }
 
-            // WIDOK 2: GŁOSOWANIE (6 OPCJI 2x3)
             if (state.view === 'voting') {
                 const cat = categories[state.currentCategoryIndex];
                 const total = categories.length;
@@ -780,24 +785,33 @@
 
         function render() {
             document.getElementById('current-box').innerHTML = buildHtmlForCurrentState();
+            document.getElementById('current-box').classList.remove('fade-out');
         }
 
+        // Płynne przejście: stary ekran zanika (fade out), a nowy wyłania się gwiazdą w środku
         function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
             playAlternatingTransitionSound();
 
+            const currentBox = document.getElementById('current-box');
             const incomingBox = document.getElementById('incoming-box');
 
+            // 1. Stary ekran zaczyna płynnie gasnąć
+            currentBox.classList.add('fade-out');
+
+            // 2. Przygotowujemy nowy ekran wewnątrz gwiazdy
             updateStateCallback();
             incomingBox.innerHTML = buildHtmlForCurrentState();
 
             incomingBox.classList.remove('star-wipe-open');
             void incomingBox.offsetWidth;
 
+            // 3. Gwiazda z nowym ekranem rozszerza się w tym samym czasie
             incomingBox.classList.add('star-wipe-open');
 
+            // 4. Po zakończeniu animacji (1.15s) resetujemy warstwy
             setTimeout(() => {
                 render();
 
@@ -828,14 +842,12 @@
             });
         }
 
-        // Kliknięcie "Głosuj" prowadzi najpierw do regulaminu!
         function startVoting() {
             runBoxedStarWipe(() => {
                 state.view = 'rules';
             });
         }
 
-        // Kliknięcie przycisku "Nie jestem cwelem..." przenosi do właściwego głosowania
         function proceedToVoting() {
             runBoxedStarWipe(() => {
                 state.view = 'voting';
