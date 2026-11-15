@@ -38,7 +38,7 @@
             object-fit: cover;
         }
 
-        /* Centralna scena gwarantująca absolutnie identyczną pozycję okienka */
+        /* Centralna scena trzymająca idealnie wymiarowane okienko */
         #stage-wrapper {
             position: relative;
             z-index: 1;
@@ -56,7 +56,7 @@
             box-sizing: border-box;
         }
 
-        /* 1. PRZEJŚCIE DO PRZODU: Gwiazda Movie Maker */
+        /* 1. PRZEJŚCIE DO PRZODU: Gwiazdka Movie Maker */
         #incoming-box.star-mode {
             z-index: 10;
             pointer-events: none;
@@ -75,70 +75,17 @@
             pointer-events: auto;
         }
 
-        /* 2. PRZEJŚCIE POWROTU: Mozaika / Pikselizacja Windows XP */
-        @keyframes mosaicDisintegrate {
-            0% {
-                filter: blur(0px) contrast(100%) brightness(100%);
-                transform: scale(1);
-                opacity: 1;
-            }
-            45% {
-                filter: blur(10px) contrast(220%) brightness(140%) saturate(200%);
-                transform: scale(0.97);
-                opacity: 0.75;
-            }
-            100% {
-                filter: blur(22px) contrast(300%) brightness(180%);
-                transform: scale(0.93);
-                opacity: 0;
-            }
-        }
-
-        @keyframes mosaicReassemble {
-            0% {
-                filter: blur(22px) contrast(300%) brightness(180%);
-                transform: scale(0.93);
-                opacity: 0;
-            }
-            55% {
-                filter: blur(8px) contrast(190%) brightness(130%);
-                transform: scale(0.98);
-                opacity: 0.85;
-            }
-            100% {
-                filter: blur(0px) contrast(100%) brightness(100%);
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .mosaic-out {
-            animation: mosaicDisintegrate 0.45s steps(6, end) forwards;
+        /* 2. PRZEJŚCIE POWROTU: Ukośny slide z prawego górnego do lewego dolnego rogu (~0.6s) */
+        #incoming-box.slide-mode {
+            z-index: 10;
             pointer-events: none;
+            clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%);
+            transition: clip-path 0.58s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .mosaic-in {
-            animation: mosaicReassemble 0.5s steps(7, end) forwards;
-        }
-
-        /* Siatka pikseli nakładana na czas mozaiki */
-        #mosaic-grid-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 20;
-            pointer-events: none;
-            display: none;
-            background-image: 
-                linear-gradient(to right, rgba(0, 255, 255, 0.25) 2px, transparent 2px),
-                linear-gradient(to bottom, rgba(0, 255, 255, 0.25) 2px, transparent 2px);
-            background-size: 28px 28px;
-        }
-
-        #mosaic-grid-overlay.active {
-            display: block;
+        #incoming-box.slide-mode.slide-wipe-open {
+            clip-path: polygon(100% 0%, 0% 0%, 0% 100%, 100% 100%);
+            pointer-events: auto;
         }
 
         /* Uniwersalny box dla każdej zawartości */
@@ -374,24 +321,21 @@
         </video>
     </div>
 
-    <!-- Dźwięki przejściowe do przodu (gwiazdka) -->
-    <audio id="sfx-1" preload="auto">
-        <source src="slimakajki/dzwiek1.mp3" type="audio/mpeg">
+    <!-- Trzy pliki dźwiękowe (wideo) używane cyklicznie na zmianę -->
+    <audio id="sound-1" preload="auto">
+        <source src="slimakajki/video_1.mp4" type="video/mp4">
     </audio>
-    <audio id="sfx-2" preload="auto">
-        <source src="slimakajki/dzwiek2.mp3" type="audio/mpeg">
+    <audio id="sound-2" preload="auto">
+        <source src="slimakajki/video_2.mp4" type="video/mp4">
     </audio>
-
-    <!-- Dźwięk powrotu (mozaika XP) - wrzuć plik dzwiek_powrotu.mp3 do folderu slimakajki -->
-    <audio id="sfx-return" preload="auto">
-        <source src="slimakajki/dzwiek_powrotu.mp3" type="audio/mpeg">
+    <audio id="sound-3" preload="auto">
+        <source src="slimakajki/video_3.mp4" type="video/mp4">
     </audio>
 
     <!-- Centralna scena trzymająca idealnie wymiarowane okienko -->
     <div id="stage-wrapper">
         <div id="current-box"></div>
         <div id="incoming-box"></div>
-        <div id="mosaic-grid-overlay"></div>
     </div>
 
     <!-- Firebase SDK -->
@@ -490,7 +434,7 @@
         };
 
         let realVisitCount = 'ŁADOWANIE';
-        let sfxToggle = 0;
+        let soundIndex = 1; // Cykliczny licznik dla 3 dźwięków (1 -> 2 -> 3 -> 1)
         let isTransitioning = false;
 
         async function updateRealVisitCounter() {
@@ -535,34 +479,19 @@
 
         document.addEventListener('click', ensureFishAudioPlaying, { once: true });
 
-        function playAlternatingTransitionSound() {
+        // Cykliczne odtwarzanie jednego z trzech dźwięków (video_1, video_2, video_3)
+        function playCyclingSound() {
             ensureFishAudioPlaying();
-            const audioId = sfxToggle === 0 ? 'sfx-1' : 'sfx-2';
-            sfxToggle = sfxToggle === 0 ? 1 : 0;
+            const soundId = `sound-${soundIndex}`;
+            const sfx = document.getElementById(soundId);
+            
+            // Przejdź do następnego dźwięku na zmianę (1 -> 2 -> 3 -> 1)
+            soundIndex = soundIndex >= 3 ? 1 : soundIndex + 1;
 
-            const sfx = document.getElementById(audioId);
             if (sfx) {
                 sfx.currentTime = 0;
                 sfx.volume = 0.9;
-                sfx.play().catch(e => console.log("Brak pliku dźwięku lub blokada autoplay:", e));
-            }
-        }
-
-        function playReturnSound() {
-            ensureFishAudioPlaying();
-            const sfxReturn = document.getElementById('sfx-return');
-            if (sfxReturn) {
-                sfxReturn.currentTime = 0;
-                sfxReturn.volume = 0.9;
-                sfxReturn.play().catch(() => {
-                    // Fallback na dźwięk 2 jeśli dzwiek_powrotu.mp3 jeszcze nie istnieje
-                    const fallback = document.getElementById('sfx-2');
-                    if (fallback) {
-                        fallback.currentTime = 0;
-                        fallback.volume = 0.8;
-                        fallback.play().catch(() => {});
-                    }
-                });
+                sfx.play().catch(e => console.log("Brak pliku dźwiękowego lub blokada autoplay:", e));
             }
         }
 
@@ -777,7 +706,7 @@
 
                     <div style="text-align: center; margin-top: 12px;">
                         <button class="retro-btn-small" onclick="copyVotes()">📋 KOPIUJ WYNIKI DO SCHOWKA (NA GG)</button>
-                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĄ GŁÓWNĄ</button>
                     </div>
                 `;
             }
@@ -868,15 +797,14 @@
             const currentBox = document.getElementById('current-box');
             currentBox.innerHTML = buildHtmlForCurrentState();
             currentBox.style.display = 'block';
-            currentBox.classList.remove('mosaic-out', 'mosaic-in');
         }
 
-        // 1. PRZEJŚCIE DO PRZODU: Gwiazdka Movie Maker
+        // 1. PRZEJŚCIE DO PRZODU: Oryginalna gwiazdka Movie Maker
         function runBoxedStarWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
-            playAlternatingTransitionSound();
+            playCyclingSound();
 
             const currentBox = document.getElementById('current-box');
             const incomingBox = document.getElementById('incoming-box');
@@ -886,8 +814,8 @@
             updateStateCallback();
             incomingBox.innerHTML = buildHtmlForCurrentState();
 
+            incomingBox.className = '';
             incomingBox.classList.add('star-mode');
-            incomingBox.classList.remove('star-wipe-open');
             void incomingBox.offsetWidth;
 
             incomingBox.classList.add('star-wipe-open');
@@ -896,7 +824,7 @@
                 render();
 
                 incomingBox.style.transition = 'none';
-                incomingBox.classList.remove('star-mode', 'star-wipe-open');
+                incomingBox.className = '';
                 incomingBox.innerHTML = '';
                 void incomingBox.offsetWidth;
                 incomingBox.style.transition = '';
@@ -904,72 +832,73 @@
             }, 1100);
         }
 
-        // 2. PRZEJŚCIE POWROTU: Mozaika / Pikselizacja Windows XP
-        function runMosaicReturnWipe(updateStateCallback) {
+        // 2. PRZEJŚCIE POWROTU / COFANIA: Ukośny slide z 3 dźwiękami cyklicznymi (~0.58s)
+        function runSlideReturnWipe(updateStateCallback) {
             if (isTransitioning) return;
             isTransitioning = true;
 
-            playReturnSound();
+            playCyclingSound();
 
             const currentBox = document.getElementById('current-box');
-            const gridOverlay = document.getElementById('mosaic-grid-overlay');
+            const incomingBox = document.getElementById('incoming-box');
 
-            // Włączamy siatkę pikseli i rozbijamy stary obraz w mozaikę
-            gridOverlay.classList.add('active');
-            currentBox.classList.remove('mosaic-in');
-            currentBox.classList.add('mosaic-out');
+            currentBox.style.display = 'none';
 
-            // W połowie animacji podmieniamy treść i składamy z pikseli nowy widok
+            updateStateCallback();
+            incomingBox.innerHTML = buildHtmlForCurrentState();
+
+            incomingBox.className = '';
+            incomingBox.classList.add('slide-mode');
+            void incomingBox.offsetWidth;
+
+            incomingBox.classList.add('slide-wipe-open');
+
             setTimeout(() => {
-                updateStateCallback();
-                currentBox.innerHTML = buildHtmlForCurrentState();
-                currentBox.classList.remove('mosaic-out');
-                void currentBox.offsetWidth;
-                currentBox.classList.add('mosaic-in');
-            }, 450);
+                render();
 
-            // Kończymy i czyścimy klasy
-            setTimeout(() => {
-                currentBox.classList.remove('mosaic-in');
-                gridOverlay.classList.remove('active');
+                incomingBox.style.transition = 'none';
+                incomingBox.className = '';
+                incomingBox.innerHTML = '';
+                void incomingBox.offsetWidth;
+                incomingBox.style.transition = '';
                 isTransitioning = false;
-            }, 950);
+            }, 580);
         }
 
-        // Nawigacja POWROTU / COFANIA używa Mozaiki Windows XP
+        // Nawigacja POWROTU / COFANIA (Ukośny Slide + 3 dźwięki)
         function showHome() {
             if (state.view === 'home') return;
-            runMosaicReturnWipe(() => {
+            runSlideReturnWipe(() => {
                 state.view = 'home';
             });
         }
 
         function showRules() {
-            runMosaicReturnWipe(() => {
+            runSlideReturnWipe(() => {
                 state.view = 'rules';
             });
         }
 
         function prevCategory() {
             if (state.currentCategoryIndex > 0) {
-                runMosaicReturnWipe(() => {
+                runSlideReturnWipe(() => {
                     state.currentCategoryIndex--;
                 });
             } else {
-                runMosaicReturnWipe(() => {
+                runSlideReturnWipe(() => {
                     state.view = 'rules';
                 });
             }
         }
 
         function editCategory(index) {
-            runMosaicReturnWipe(() => {
+            runSlideReturnWipe(() => {
                 state.currentCategoryIndex = index;
                 state.view = 'voting';
             });
         }
 
-        // Nawigacja DO PRZODU używa Gwiazdki Movie Maker
+        // Nawigacja DO PRZODU (Oryginalna gwiazdka Movie Maker)
         function showDownload() {
             runBoxedStarWipe(() => {
                 state.view = 'download';
