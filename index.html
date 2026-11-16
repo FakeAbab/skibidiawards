@@ -19,7 +19,7 @@
             align-items: flex-start;
         }
 
-        /* Tło z zapętlonym wideo rybek - podmieniane lub domyślne */
+        /* Tło z zapętlonym wideo rybek */
         #bg-video-container {
             position: fixed;
             top: 0;
@@ -38,7 +38,6 @@
             object-fit: cover;
         }
 
-        /* Centralna scena gwarantująca absolutnie identyczną pozycję okienka */
         #stage-wrapper {
             position: relative;
             z-index: 1;
@@ -88,7 +87,6 @@
             pointer-events: auto;
         }
 
-        /* Uniwersalny box dla każdej zawartości */
         .portal-box {
             width: 100%;
             box-sizing: border-box;
@@ -99,7 +97,6 @@
             position: relative;
         }
 
-        /* Tabela główna portalu (układ z menu po lewej i treścią po prawej) */
         .main-table {
             width: 100%;
             background-color: rgba(0, 0, 102, 0.94);
@@ -130,20 +127,24 @@
             border: 2px outset #FF6666;
         }
 
-        /* Płynnie zmieniające kolory strzałki w nagłówku */
-        @keyframes colorShift {
-            0% { color: #FF0000; text-shadow: 0 0 10px #FF0000; }
-            33% { color: #00FF00; text-shadow: 0 0 10px #00FF00; }
-            66% { color: #00FFFF; text-shadow: 0 0 10px #00FFFF; }
-            100% { color: #FF0000; text-shadow: 0 0 10px #FF0000; }
+        /* Strzałki płynnie zmieniające kolory obok przycisku głosowania */
+        @keyframes arrowColorCycle {
+            0%   { color: #FF0000; text-shadow: 0 0 12px #FF0000; }
+            25%  { color: #FFFF00; text-shadow: 0 0 12px #FFFF00; }
+            50%  { color: #00FF00; text-shadow: 0 0 12px #00FF00; }
+            75%  { color: #00FFFF; text-shadow: 0 0 12px #00FFFF; }
+            100% { color: #FF0000; text-shadow: 0 0 12px #FF0000; }
         }
-        .rainbow-arrow {
-            font-size: 38px;
-            font-weight: 900;
-            animation: colorShift 4s infinite linear;
+
+        .header-side-arrow {
             display: inline-block;
-            margin: 0 15px;
+            font-family: "Arial Black", Impact, sans-serif;
+            font-size: 36px;
+            font-weight: 900;
             vertical-align: middle;
+            margin: 0 18px;
+            animation: arrowColorCycle 5s infinite linear;
+            user-select: none;
         }
 
         .sidebar-cell {
@@ -151,6 +152,7 @@
             background-color: rgba(0, 0, 68, 0.96);
             font-family: Arial, Helvetica, sans-serif;
             font-size: 13px;
+            position: relative;
         }
 
         .sidebar-title {
@@ -177,6 +179,67 @@
             background-color: #000088;
         }
 
+        /* Sticky Note na dole lewego paska bocznego + długa strzałka do ziomka */
+        .sidebar-sticky-wrapper {
+            position: relative;
+            margin-top: 16px;
+            z-index: 30;
+        }
+
+        .sidebar-sticky-note {
+            background: linear-gradient(135deg, #FFF78A 0%, #FFE853 100%);
+            color: #111111;
+            border: 2px solid #D4B82C;
+            padding: 10px 10px 12px 10px;
+            font-family: "Comic Sans MS", "Courier New", cursive, sans-serif;
+            font-size: 12px;
+            line-height: 1.35;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.75);
+            transform: rotate(-1.5deg);
+            transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 32;
+        }
+
+        .sidebar-sticky-note::before {
+            content: "";
+            position: absolute;
+            top: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 55px;
+            height: 14px;
+            background-color: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(200, 200, 200, 0.5);
+        }
+
+        .sidebar-sticky-wrapper:hover .sidebar-sticky-note {
+            transform: scale(1.07) rotate(0deg);
+            box-shadow: 0 0 18px #FFFF00, 5px 5px 14px rgba(0, 0, 0, 0.9);
+            filter: brightness(1.08);
+        }
+
+        /* Strzałka wystająca z prawej strony karteczki lecąca aż do ziomka z głośnikiem */
+        .pointer-to-dj {
+            position: absolute;
+            top: 42%;
+            left: 98%;
+            width: 430px;
+            height: 36px;
+            pointer-events: none;
+            z-index: 31;
+            transform-origin: left center;
+            transform: translateY(-50%) rotate(-12deg) scaleX(0);
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
+        }
+
+        .sidebar-sticky-wrapper:hover .pointer-to-dj {
+            transform: translateY(-50%) rotate(-12deg) scaleX(1);
+            opacity: 1;
+        }
+
         .content-cell {
             background-color: rgba(0, 0, 85, 0.96);
             color: #FFFFFF;
@@ -191,7 +254,7 @@
             border: 4px outset #FFFFFF;
             cursor: pointer;
             text-transform: uppercase;
-            margin-top: 10px;
+            vertical-align: middle;
         }
 
         .retro-btn:active {
@@ -214,183 +277,257 @@
             border: 3px inset #808080;
         }
 
-        /* Migająca ramka witająca z tekstem xab side */
-        @keyframes borderBlink {
-            0% { border-color: #FF0000; box-shadow: 0 0 10px #FF0000; }
-            33% { border-color: #FFFF00; box-shadow: 0 0 15px #FFFF00; }
-            66% { border-color: #00FFFF; box-shadow: 0 0 10px #00FFFF; }
-            100% { border-color: #FF0000; box-shadow: 0 0 10px #FF0000; }
-        }
-        .welcome-retro-box {
-            border: 4px dashed #FF0000;
-            animation: borderBlink 1.5s infinite;
-            background-color: rgba(0, 0, 40, 0.85);
-            padding: 15px;
-            text-align: center;
-            margin-bottom: 15px;
+        /* Migająca ramka "WITAJ W XAB SIDE" zgodna ze szkicem */
+        @keyframes welcomeFlashBorder {
+            0%   { border-color: #FF0000; box-shadow: inset 0 0 12px #FF0000, 0 0 10px #FF0000; }
+            33%  { border-color: #FFFF00; box-shadow: inset 0 0 12px #FFFF00, 0 0 10px #FFFF00; }
+            66%  { border-color: #00FFFF; box-shadow: inset 0 0 12px #00FFFF, 0 0 10px #00FFFF; }
+            100% { border-color: #FF0000; box-shadow: inset 0 0 12px #FF0000, 0 0 10px #FF0000; }
         }
 
-        /* Układ sekcji głównej: Komiks po lewej, Głośnik po prawej */
-        .main-stage-layout {
+        .xab-welcome-banner {
+            border: 4px dashed #FF0000;
+            animation: welcomeFlashBorder 1.4s infinite linear;
+            background-color: rgba(0, 0, 48, 0.9);
+            padding: 12px 16px;
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .xab-welcome-banner h1 {
+            color: #FF3333;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            margin: 0 0 6px 0;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px #000000;
+        }
+
+        .xab-welcome-banner h1 span {
+            text-decoration: underline;
+            color: #FF4444;
+        }
+
+        .xab-welcome-banner p {
+            color: #FFFFFF;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        /* Układ główny pod banerem: Komiks Tygodnia po lewej, Ziomek + Głośnik + Paski po prawej */
+        .middle-split-grid {
             display: grid;
-            grid-template-columns: 240px 1fr;
-            gap: 15px;
+            grid-template-columns: 310px 1fr;
+            gap: 14px;
             align-items: start;
         }
 
-        .comic-panel {
-            background-color: #000022;
-            border: 3px inset #FFCC00;
-            min-height: 290px;
-            padding: 8px;
-            text-align: center;
-            font-family: "Courier New", monospace;
-            font-size: 12px;
-            color: #CCCCCC;
+        @media (max-width: 860px) {
+            .middle-split-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .speaker-area {
-            position: relative;
-            background-color: #000022;
-            border: 3px ridge #C0C0C0;
-            padding: 12px;
+        .comic-box-wrapper {
             text-align: center;
+        }
+
+        .comic-title {
+            color: #FF3333;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            font-size: 20px;
+            margin-bottom: 6px;
+            text-align: left;
+            text-shadow: 1px 1px #000000;
+        }
+
+        .comic-frame {
+            width: 100%;
+            height: 330px;
+            background-color: #000038;
+            border: 3px solid #FF3333;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8888AA;
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+        }
+
+        /* Prawa strona: Ziomek z głośnikiem + czerwone paski wychodzące z prawej krawędzi głośnika */
+        .dj-stage-column {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
         }
 
-        /* Wizualizacja dźwięku (czerwone paski wychodzące zza głośnika) */
-        .visualizer-container {
+        .dj-and-bars-row {
             display: flex;
             align-items: flex-end;
-            gap: 3px;
-            height: 75px;
-            background-color: #000000;
-            border: 2px inset #FF0000;
-            padding: 4px;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 10px;
-        }
-        .vis-bar {
-            flex: 1;
-            background-color: #FF0000;
-            height: 10%;
-            transition: height 0.05s ease;
+            justify-content: flex-start;
+            position: relative;
+            min-height: 295px;
         }
 
-        /* Odtwarzacz muzyczny w stylu retro winamp */
-        .winamp-player {
-            background: linear-gradient(180deg, #444444 0%, #111111 100%);
-            border: 3px outset #888888;
-            width: 100%;
-            box-sizing: border-box;
-            padding: 6px;
-            margin-top: 8px;
-            font-family: "Courier New", monospace;
+        .dj-artwork-wrap {
+            position: relative;
+            z-index: 2;
+            flex-shrink: 0;
+            line-height: 0;
         }
-        .winamp-screen {
-            background-color: #001100;
+
+        .dj-artwork-wrap img {
+            width: 315px;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            /* Wtapia granatowe tło obrazka w granatowe tło strony bez obramowania */
+            mix-blend-mode: lighten;
+        }
+
+        /* Poziome czerwone paski wizualizacji wychodzące zza prawej strony głośnika (jak na rysunku!) */
+        .horizontal-eq-bars {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 195px;
+            margin-bottom: 18px;
+            margin-left: -6px;
+            z-index: 1;
+            padding: 4px 0;
+        }
+
+        .h-bar {
+            height: 13px;
+            background-color: #FF1111;
+            box-shadow: 0 0 8px rgba(255, 0, 0, 0.7);
+            width: 25%;
+            transition: width 0.06s ease-out;
+            border-top-right-radius: 2px;
+            border-bottom-right-radius: 2px;
+        }
+
+        /* Retro pasek odtwarzacza bezpośrednio pod głośnikiem i paskami */
+        .retro-desktop-player {
+            display: flex;
+            align-items: stretch;
+            background-color: #000044;
+            border: 3px solid #5555AA;
+            height: 44px;
+            margin-top: 2px;
+            box-shadow: 3px 3px 0px #000000;
+        }
+
+        .player-marquee-track {
+            flex: 1;
+            background-color: #000028;
+            border-right: 3px solid #5555AA;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
             color: #00FF00;
-            border: 2px inset #222222;
-            padding: 4px;
+            font-family: "Courier New", Courier, monospace;
+            font-weight: bold;
             font-size: 13px;
             overflow: hidden;
-            white-space: nowrap;
-            text-align: left;
-        }
-        .winamp-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 6px;
-        }
-        .winamp-btn-group {
-            display: flex;
-            gap: 4px;
         }
 
-        /* Scam Reklama */
-        .scam-banner {
-            background: linear-gradient(90deg, #990000, #FF0000, #990000);
-            border: 3px outset #FF8888;
-            color: #FFFFFF;
+        .player-square-btn {
+            width: 44px;
+            background-color: #1A1A66;
+            color: #99CCFF;
+            border: none;
+            border-left: 2px solid #5555AA;
+            font-family: "Courier New", monospace;
             font-weight: bold;
-            padding: 10px;
-            text-align: center;
-            margin-top: 12px;
+            font-size: 13px;
             cursor: pointer;
-            text-shadow: 2px 2px #000000;
-            font-size: 15px;
-        }
-        .scam-banner:hover {
-            background: linear-gradient(90deg, #FF0000, #FFFF00, #FF0000);
-            color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
 
-        /* Sticky Note z interaktywną strzałką */
-        .sticky-note-wrapper {
-            position: relative;
-            margin-top: 15px;
-            text-align: right;
+        .player-square-btn:hover {
+            background-color: #333399;
+            color: #FFFF00;
         }
-        .sticky-note {
-            display: inline-block;
-            background-color: #FFFF99;
-            color: #000000;
-            border: 2px solid #CCCC66;
-            padding: 10px;
-            width: 220px;
-            text-align: left;
+
+        .player-square-btn:active {
+            background-color: #000033;
+        }
+
+        /* Scam reklama pod odtwarzaczem */
+        .scam-ad-box {
+            margin-top: 14px;
+            background: linear-gradient(90deg, #660000 0%, #CC0000 50%, #660000 100%);
+            border: 3px outset #FF6666;
+            padding: 10px 12px;
+            text-align: center;
+            cursor: pointer;
             font-family: "Comic Sans MS", Arial, sans-serif;
-            font-size: 12px;
-            box-shadow: 3px 3px 7px rgba(0,0,0,0.6);
-            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
-            cursor: pointer;
-            position: relative;
-            z-index: 5;
-        }
-        .sticky-note:hover {
-            transform: scale(1.06) rotate(-1deg);
-            background-color: #FFFF55;
-            box-shadow: 5px 5px 15px rgba(255,255,0,0.5);
-        }
-        .sticky-arrow {
-            position: absolute;
-            top: 50%;
-            right: 100%;
-            transform: translateY(-50%) scaleX(0);
-            transform-origin: right center;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-            z-index: 4;
-            white-space: nowrap;
-        }
-        .sticky-note-wrapper:hover .sticky-arrow {
-            transform: translateY(-50%) scaleX(1);
+            color: #FFFF00;
+            font-weight: bold;
+            font-size: 15px;
+            text-shadow: 2px 2px #000000;
+            box-shadow: 0 0 12px rgba(255, 0, 0, 0.5);
         }
 
-        /* Akwarium z bąbelkami na samym dole */
-        .aquarium-box {
-            background-color: #001133;
-            border: 4px ridge #00FFFF;
-            padding: 10px;
+        .scam-ad-box:hover {
+            background: linear-gradient(90deg, #CC0000 0%, #FF6600 50%, #CC0000 100%);
+            transform: scale(1.01);
+        }
+
+        /* Akwarium na samym dole w stylu Painta z bąbelkami */
+        .bottom-aquarium-wrap {
+            background-color: #000044;
+            border: 3px inset #6666CC;
+            padding: 8px;
             text-align: center;
+        }
+
+        .aquarium-header-text {
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 900;
+            font-size: 32px;
+            letter-spacing: 2px;
+            color: #2B547E;
+            text-shadow: -1px -1px 0 #77AADD, 1px -1px 0 #77AADD, -1px 1px 0 #000, 1px 1px 0 #000;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .paint-aquarium-canvas {
             position: relative;
+            width: 100%;
+            height: 155px;
+            background-color: #00BFFF;
+            border: 3px solid #111111;
             overflow: hidden;
-            margin-top: 15px;
+            box-sizing: border-box;
         }
-        .bubble {
+
+        .bubble-dot {
             position: absolute;
-            background-color: rgba(255, 255, 255, 0.6);
-            border: 1px solid #FFFFFF;
+            bottom: 24px;
+            border: 2px solid #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.45);
             border-radius: 50%;
-            animation: riseBubble 4s infinite linear;
+            animation: floatBubbleUp 4.5s infinite ease-in;
+            pointer-events: none;
         }
-        @keyframes riseBubble {
-            0% { bottom: 0px; transform: scale(0.6); opacity: 0.8; }
-            100% { bottom: 130px; transform: scale(1.2); opacity: 0; }
+
+        @keyframes floatBubbleUp {
+            0%   { transform: translateY(0) scale(0.7); opacity: 0.9; }
+            50%  { transform: translateY(-60px) translateX(6px) scale(1); opacity: 0.8; }
+            100% { transform: translateY(-130px) translateX(-4px) scale(1.2); opacity: 0; }
         }
 
         .counter-box {
@@ -404,317 +541,886 @@
             letter-spacing: 2px;
         }
 
-        /* Modal Avast Antivirus */
-        #avast-modal {
+        .blink {
+            animation: blinker 0.7s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+
+        /* Style dla podstron głosowania */
+        .mega-download-btn {
+            display: inline-block;
+            background: linear-gradient(180deg, #00FF00 0%, #009900 100%);
+            color: #000000;
+            font-family: "Comic Sans MS", "Arial Black", Impact, sans-serif;
+            font-size: 20px;
+            font-weight: 900;
+            padding: 18px 20px;
+            border: 6px outset #88FF88;
+            text-decoration: none;
+            text-shadow: 1px 1px 0px #FFFFFF;
+            box-shadow: 0 0 20px #00FF00;
+            cursor: pointer;
+            word-break: break-word;
+            line-height: 1.25;
+        }
+
+        .nominees-grid-6 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 16px 0;
+        }
+
+        .nominee-box {
+            background-color: #000033;
+            border: 3px outset #6666CC;
+            padding: 12px 10px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .nominee-selected {
+            background-color: #660000 !important;
+            border: 3px inset #FFCC00 !important;
+            box-shadow: 0 0 12px #FFCC00;
+        }
+
+        .avatar-placeholder {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 8px auto;
+            background-color: #C0C0C0;
+            color: #000000;
+            border: 2px inset #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        /* Modal ładowania i blokady Avast Antivirus */
+        .retro-overlay-modal {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: rgba(0,0,0,0.8);
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.82);
             z-index: 99999;
             justify-content: center;
             align-items: center;
         }
-        .avast-window {
+
+        .win-dialog {
             background-color: #ECE9D8;
             border: 3px outset #FFFFFF;
-            width: 420px;
+            width: 440px;
+            max-width: 92vw;
             color: #000000;
-            font-family: Tahoma, sans-serif;
+            font-family: Tahoma, Arial, sans-serif;
             font-size: 12px;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.9);
+            box-shadow: 6px 6px 24px rgba(0, 0, 0, 0.95);
         }
-        .avast-titlebar {
-            background: linear-gradient(90deg, #0055EA, #2686FF);
-            color: white;
+
+        .win-dialog-bar {
+            background: linear-gradient(90deg, #0055EA 0%, #2686FF 100%);
+            color: #FFFFFF;
             font-weight: bold;
-            padding: 4px 8px;
+            padding: 5px 8px;
             display: flex;
             justify-content: space-between;
-        }
-        .avast-body {
-            padding: 16px;
-            display: flex;
-            gap: 12px;
             align-items: center;
         }
 
-        .blink {
-            animation: blinker 0.7s linear infinite;
-        }
-        @keyframes blinker {
-            50% { opacity: 0; }
+        .avast-alert-bar {
+            background: linear-gradient(90deg, #990000 0%, #FF1111 100%);
         }
     </style>
 </head>
 <body>
 
-    <!-- Tło wideo / aktywne audio -->
+    <!-- Tło wideo z rybkami (może zostać podmienione przez użytkownika w edytorze) -->
     <div id="bg-video-container">
-        <video id="bg-media-element" autoplay loop playsinline>
+        <video id="bg-fish-video" autoplay muted loop playsinline>
             <source src="slimakajki/ryby2.mp4" type="video/mp4">
         </video>
     </div>
 
-    <!-- Modal Avast Antivirus -->
-    <div id="avast-modal">
-        <div class="avast-window">
-            <div class="avast-titlebar">
-                <span>Avast! Antivirus - OSTRZEŻENIE WIRUSOWE!</span>
-                <span style="cursor:pointer;" onclick="closeAvast()">[X]</span>
+    <!-- Ukryty odtwarzacz dla własnego pliku audio/wideo użytkownika -->
+    <video id="custom-track-player" loop playsinline style="display:none;"></video>
+
+    <!-- Dźwięki przejść -->
+    <audio id="sfx-1" preload="auto"><source src="slimakajki/dzwiek1.mp3" type="audio/mp3"></audio>
+    <audio id="sfx-2" preload="auto"><source src="slimakajki/dzwiek2.mp3" type="audio/mp3"></audio>
+    <audio id="ret-sound-1" preload="auto"><source src="slimakajki/powrot1.mp3" type="audio/mp3"></audio>
+    <audio id="ret-sound-2" preload="auto"><source src="slimakajki/powrot2.mp3" type="audio/mp3"></audio>
+    <audio id="ret-sound-3" preload="auto"><source src="slimakajki/powrot3.mp3" type="audio/mp3"></audio>
+
+    <!-- Modal 1: Ładowanie Scam Reklamy -->
+    <div id="scam-loading-modal" class="retro-overlay-modal">
+        <div class="win-dialog">
+            <div class="win-dialog-bar">
+                <span>Internet Explorer - Łączenie z serwerem nagród...</span>
             </div>
-            <div class="avast-body">
-                <div style="font-size: 32px;">🚨</div>
+            <div style="padding: 18px; text-align: center;">
+                <p style="margin: 0 0 10px 0; font-weight: bold;">Trwa weryfikacja Twojego IP i pobieranie nagrody...</p>
+                <div style="width: 100%; height: 20px; background: #FFF; border: 2px inset #808080; overflow: hidden;">
+                    <div id="scam-progress-bar" style="width: 0%; height: 100%; background: #00AA00; transition: width 1.6s linear;"></div>
+                </div>
+                <p style="margin: 8px 0 0 0; font-size: 11px; color: #555;">Proszę czekać, nie zamykaj okna...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Blokada Avast Antivirus -->
+    <div id="avast-blocked-modal" class="retro-overlay-modal">
+        <div class="win-dialog" style="border-color: #FF4444;">
+            <div class="win-dialog-bar avast-alert-bar">
+                <span>⚠️ avast! Antivirus - ZABLOKOWANO ZAGROŻENIE!</span>
+                <span style="cursor:pointer;" onclick="closeAvastModal()">[X]</span>
+            </div>
+            <div style="padding: 16px; display: flex; gap: 14px; align-items: flex-start;">
+                <div style="font-size: 38px; line-height: 1;">🛑</div>
                 <div>
-                    <b style="color: #CC0000; font-size: 14px;">Wykryto zagrożenie w pliku!</b><br>
-                    Moduł ochrony WWW zablokował próbę pobrania podejrzanego trojana (<i>Trojan.Win32.SkibidiTwerk.gen</i>). Strona została odizolowana!
+                    <div style="color: #CC0000; font-weight: bold; font-size: 14px; margin-bottom: 6px;">
+                        STRONA ZOSTAŁA ZABLOKOWANA PRZEZ AVAST ANTIVIRUS!
+                    </div>
+                    <p style="margin: 0 0 8px 0; line-height: 1.4;">
+                        Osłona WWW wykryła złośliwe oprogramowanie próbujące zainfekować Twój komputer.<br>
+                        <b>Zagrożenie:</b> <span style="color:#990000;">Win32:FreeIphone-SCAM [Trj]</span><br>
+                        <b>Status:</b> Połączenie przerwane dla Twojego bezpieczeństwa.
+                    </p>
                 </div>
             </div>
-            <div style="background-color: #E0DFDE; padding: 8px; text-align: right;">
-                <button class="retro-btn-small" onclick="closeAvast()">OK / KWARANTANNA</button>
+            <div style="background-color: #DFDCD1; padding: 8px 12px; text-align: right; border-top: 1px solid #BBB;">
+                <button class="retro-btn-small" onclick="closeAvastModal()">Zamknij ostrzeżenie</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal wysuwanego Kreatora / Dodawania własnego utworu i tła -->
-    <div id="creator-modal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); z-index:88888; justify-content:center; align-items:center;">
-        <div style="background:#000044; border:4px ridge #FFCC00; padding:20px; width:480px; color:#FFF; font-family:'Courier New', monospace;">
-            <h3 style="color:#FFCC00; margin-top:0; text-align:center;">🛠️ KREATOR XAB SIDE - WGRAJ WŁASNY PLIK</h3>
-            <p style="font-size:12px; color:#00FFFF; line-height:1.4;">
-                Wgraj swój plik wideo (.mp4) lub audio z komputera! Posłuży on jako tło oraz źródło muzyki dla wizualizacji dźwięku.<br>
-                <b style="color:#FF6666;">Ostrzeżenie:</b> Zalecana waga pliku to max ~50MB. Zbyt ciężkie pliki mogą przyciąć Twoją Neostradę!
-            </p>
-            <div style="margin: 15px 0;">
-                <label style="display:block; margin-bottom:5px; font-weight:bold;">Wybierz plik z komputera (.mp4 / .mp3):</label>
-                <input type="file" id="user-file-input" accept="video/mp4,audio/*" style="background:#C0C0C0; color:#000; padding:6px; width:100%; box-sizing:border-box;">
+    <!-- Modal 3: Kreator / Edytor własnego utworu i tła (.mp4 z komputera) -->
+    <div id="creator-editor-modal" class="retro-overlay-modal">
+        <div style="background-color: #000044; border: 4px ridge #FFCC00; padding: 20px; width: 510px; max-width: 94vw; color: #FFFFFF; font-family: 'Courier New', monospace;">
+            <div style="background-color: #FFCC00; color: #000000; font-weight: bold; padding: 5px 8px; margin-bottom: 12px; display: flex; justify-content: space-between;">
+                <span>🎛️ EDYTOR TŁA I MUZYKI - XAB SIDE STUDIO 2006</span>
+                <span style="cursor:pointer;" onclick="closeCreatorModal()">[X]</span>
             </div>
-            <div style="text-align:center; margin-top:20px; display:flex; justify-content:space-between;">
-                <button class="retro-btn-small" onclick="closeCreator()">ANULUJ</button>
-                <button class="retro-btn-small" style="background:#00FF00; color:#000;" onclick="applyUserFile()">ODTWARZAJ MOJE WIDEO &gt;&gt;</button>
+
+            <div style="background-color: #330000; border: 2px solid #FF3333; padding: 10px; margin-bottom: 14px; font-size: 12px; line-height: 1.45;">
+                <b style="color: #FFFF00;">⚠️ WAŻNE OSTRZEŻENIE PRZED WGRANIEM:</b><br>
+                • Zalecany rozmiar pliku wideo/audio to maksymalnie <b>ok. 50–100 MB</b> (zbyt duże pliki mogą spowolnić lub zawiesić przeglądarkę).<br>
+                • Prawdopodobnie <b>nie wszystkie kodeki/pliki .mp4 będą działać</b> poprawnie w każdej przeglądarce.<br>
+                • Pliki działają lokalnie w Twojej sesji i nie są wysyłane na żaden serwer.
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <label style="display:block; color:#00FFFF; font-weight:bold; margin-bottom:4px;">
+                    1. Wybierz utwór / wideo do odtwarzacza i wizualizacji (.mp4 / .mp3):
+                </label>
+                <input type="file" id="creator-audio-file" accept="video/mp4,audio/*" style="background:#C0C0C0; color:#000; padding:5px; width:100%; box-sizing:border-box;">
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display:block; color:#00FF00; font-weight:bold; margin-bottom:4px;">
+                    2. (Opcjonalnie) Wybierz własne nagranie wideo jako tło strony (.mp4):
+                </label>
+                <input type="file" id="creator-bg-file" accept="video/mp4" style="background:#C0C0C0; color:#000; padding:5px; width:100%; box-sizing:border-box;">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; border-top: 2px groove #808080; padding-top: 12px;">
+                <button class="retro-btn-small" onclick="closeCreatorModal()">« ANULUJ</button>
+                <button class="retro-btn-small" style="background-color: #00FF00; color: #000000;" onclick="applyCreatorMedia()">
+                    ✔ ZASTOSUJ I ODTWARZAJ
+                </button>
             </div>
         </div>
     </div>
 
+    <!-- Centralna scena trzymająca idealnie wymiarowane okienko -->
     <div id="stage-wrapper">
         <div id="current-box"></div>
         <div id="incoming-box"></div>
     </div>
 
-    <script>
-        let state = {
-            songTitle: 'ryby2.mp4 (Domyślny Ambient Akwariowy)',
-            isPlaying: true
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, push, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1cuClvpiH7AUkamV7KKiau6BNAlmfC88",
+            authDomain: "skibidi-awards-2026.firebaseapp.com",
+            databaseURL: "https://skibidi-awards-2026-default-rtdb.firebaseio.com",
+            projectId: "skibidi-awards-2026",
+            storageBucket: "skibidi-awards-2026.firebasestorage.app",
+            messagingSenderId: "938098038141",
+            appId: "1:938098038141:web:6e910dfdd819742e962814",
+            measurementId: "G-JVHP54DNWW"
         };
 
-        let audioCtx, analyser, dataArray, sourceNode;
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-        function initAudioAnalyzer() {
-            if (audioCtx) return;
+        const activeConnRef = push(ref(db, 'status/online'));
+        set(activeConnRef, true);
+        onDisconnect(activeConnRef).remove();
+
+        onValue(ref(db, 'status/online'), (snapshot) => {
+            const val = snapshot.val();
+            const count = val ? Object.keys(val).length : 1;
+            const onlineEl = document.getElementById('online-counter-display');
+            if (onlineEl) {
+                onlineEl.textContent = `${count} ${count === 1 ? 'osoba' : (count < 5 ? 'osoby' : 'osób')}`;
+            }
+        });
+    </script>
+
+    <script>
+        const categories = [
+            {
+                id: 1,
+                name: "Streamer Roku 2006",
+                description: "Najlepszy twórca w całym polskim internecie!",
+                nominees: [
+                    { id: 's1', name: 'xThzt', tag: 'GG: 482910', image: '' },
+                    { id: 's2', name: 'VibeCheck', tag: 'GG: 192834', image: '' },
+                    { id: 's3', name: 'KrólowaChatu', tag: 'GG: 993812', image: '' },
+                    { id: 's4', name: 'PixelArtur', tag: 'GG: 551029', image: '' },
+                    { id: 's5', name: 'CyberMati', tag: 'GG: 774120', image: '' },
+                    { id: 's6', name: 'DJ_Neostrada', tag: 'GG: 310944', image: '' }
+                ]
+            },
+            {
+                id: 2,
+                name: "Król Just Chatting / Gadu-Gadu",
+                description: "Najlepsze rozmowy do późnej nocy na Neostradzie.",
+                nominees: [
+                    { id: 's7', name: 'GadulaPL', tag: 'Neostrada 512kb', image: '' },
+                    { id: 's8', name: 'KawiarniaKrótkich', tag: 'Tlen.pl', image: '' },
+                    { id: 's9', name: 'NocneGadki', tag: 'IRC #polska', image: '' },
+                    { id: 's10', name: 'PanEgzekutor', tag: 'Skype 2.0', image: '' },
+                    { id: 's11', name: 'MistrzStatusów', tag: 'Opis na GG', image: '' },
+                    { id: 's12', name: 'KafejkaNet', tag: '2 zł / godzina', image: '' }
+                ]
+            },
+            {
+                id: 3,
+                name: "Odkrycie Roku 2006",
+                description: "Nowa gwiazda, która rozbiła bank na Naszej-Klasie i forach.",
+                nominees: [
+                    { id: 's13', name: 'NowyNaRewirze', tag: 'Debiutant', image: '' },
+                    { id: 's14', name: 'ŚwieżaKrew', tag: 'Debiutant', image: '' },
+                    { id: 's15', name: 'Błyskawica', tag: 'Debiutant', image: '' },
+                    { id: 's16', name: 'TurboStart', tag: 'Debiutant', image: '' },
+                    { id: 's17', name: 'SzybkiBill', tag: 'Debiutant', image: '' },
+                    { id: 's18', name: 'ZłotyStrzał', tag: 'Debiutant', image: '' }
+                ]
+            },
+            {
+                id: 4,
+                name: "Mistrz Gier Komputerowych",
+                description: "Najlepszy gracz CS 1.6, Tibii, Gothica i Metina.",
+                nominees: [
+                    { id: 's19', name: 'ProGamer_99', tag: 'CS 1.6 Pro', image: '' },
+                    { id: 's20', name: 'AimBotGirl', tag: 'Tibia 7.6', image: '' },
+                    { id: 's21', name: 'SpeedrunMaster', tag: 'Gothic II', image: '' },
+                    { id: 's22', name: 'CierpliwyGracz', tag: 'Quake III', image: '' },
+                    { id: 's23', name: 'KowalMetin2', tag: 'Spalił na +9', image: '' },
+                    { id: 's24', name: 'BezimiennyPL', tag: 'Stary Obóz', image: '' }
+                ]
+            }
+        ];
+
+        let state = {
+            view: 'home',
+            currentCategoryIndex: 0,
+            votes: {},
+            currentTrackName: 'ryby2.mp4 - Oryginalny Sound Akwarium 2006',
+            isCustomTrackActive: false,
+            isMuted: false,
+            isPaused: false
+        };
+
+        let realVisitCount = 'ŁADOWANIE';
+        let sfxToggle = 0;
+        let returnSoundIndex = 1;
+        let isTransitioning = false;
+
+        // Web Audio API dla czerwonych pasków wychodzących z głośnika
+        let audioCtx = null;
+        let analyser = null;
+        let connectedElements = new WeakSet();
+
+        function connectMediaToVisualizer(mediaElement) {
+            if (!mediaElement) return;
             try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
-                analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 64;
-                
-                const mediaEl = document.getElementById('bg-media-element');
-                sourceNode = audioCtx.createMediaElementSource(mediaEl);
-                sourceNode.connect(analyser);
-                analyser.connect(audioCtx.destination);
-                
-                startVisualizerLoop();
-            } catch(e) {
-                console.log("Audio Context info:", e);
-            }
-        }
-
-        function startVisualizerLoop() {
-            const bars = document.querySelectorAll('.vis-bar');
-            if (!bars.length || !analyser) return;
-            
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-            function updateVis() {
-                if (analyser) {
-                    analyser.getByteFrequencyData(dataArray);
-                    bars.forEach((bar, idx) => {
-                        const val = dataArray[idx] || 10;
-                        const heightPct = Math.max(10, (val / 255) * 100);
-                        bar.style.height = heightPct + '%';
-                    });
+                if (!audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                    analyser = audioCtx.createAnalyser();
+                    analyser.fftSize = 64;
                 }
-                requestAnimationFrame(updateVis);
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (!connectedElements.has(mediaElement)) {
+                    const src = audioCtx.createMediaElementSource(mediaElement);
+                    src.connect(analyser);
+                    analyser.connect(audioCtx.destination);
+                    connectedElements.add(mediaElement);
+                }
+            } catch (e) {
+                console.log("Web Audio info:", e);
             }
-            updateVis();
         }
 
-        document.addEventListener('click', () => {
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            const mediaEl = document.getElementById('bg-media-element');
-            if (mediaEl && mediaEl.paused) {
-                mediaEl.play().catch(()=>{});
-            }
-        }, { once: true });
+        function startHorizontalVisualizerLoop() {
+            const dataArray = new Uint8Array(32);
 
-        function buildPortalHtml() {
+            function tick() {
+                const bars = document.querySelectorAll('.h-bar');
+                if (bars.length > 0) {
+                    if (analyser && !state.isPaused && !state.isMuted) {
+                        analyser.getByteFrequencyData(dataArray);
+                        bars.forEach((bar, idx) => {
+                            const val = dataArray[idx + 1] || 0;
+                            const pct = Math.max(12, Math.min(100, (val / 255) * 100));
+                            bar.style.width = pct + '%';
+                        });
+                    } else if (!state.isPaused && !state.isMuted) {
+                        // Delikatna animacja spoczynkowa zanim przeglądarka odblokuje AudioContext
+                        const t = Date.now() / 180;
+                        bars.forEach((bar, idx) => {
+                            const fakeVal = 20 + Math.abs(Math.sin(t + idx * 0.7)) * 45;
+                            bar.style.width = fakeVal + '%';
+                        });
+                    } else {
+                        bars.forEach(bar => bar.style.width = '10%');
+                    }
+                }
+                requestAnimationFrame(tick);
+            }
+            requestAnimationFrame(tick);
+        }
+
+        async function updateRealVisitCounter() {
+            try {
+                const alreadyCounted = sessionStorage.getItem('skibidi_visited');
+                const endpoint = alreadyCounted
+                    ? 'https://api.counterapi.dev/v1/fakeabab-skibidiawards/visits'
+                    : 'https://api.counterapi.dev/v1/fakeabab-skibidiawards/visits/up';
+
+                const res = await fetch(endpoint);
+                const data = await res.json();
+                if (data && typeof data.count === 'number') {
+                    sessionStorage.setItem('skibidi_visited', '1');
+                    realVisitCount = String(data.count).padStart(7, '0');
+                } else {
+                    realVisitCount = '0000029';
+                }
+            } catch (e) {
+                realVisitCount = '0000029';
+            }
+
+            const counterEl = document.getElementById('visit-counter-display');
+            if (counterEl) counterEl.textContent = realVisitCount;
+        }
+
+        function getActiveAudioSource() {
+            return state.isCustomTrackActive
+                ? document.getElementById('custom-track-player')
+                : document.getElementById('bg-fish-video');
+        }
+
+        function ensureFishAudioPlaying() {
+            const activeMedia = getActiveAudioSource();
+            if (activeMedia && !state.isPaused) {
+                activeMedia.muted = state.isMuted;
+                activeMedia.volume = 0.6;
+                connectMediaToVisualizer(activeMedia);
+                if (activeMedia.paused) {
+                    activeMedia.play().catch(() => {});
+                }
+            }
+        }
+
+        document.addEventListener('click', ensureFishAudioPlaying, { once: true });
+
+        function togglePlayerPause() {
+            const activeMedia = getActiveAudioSource();
+            if (!activeMedia) return;
+            connectMediaToVisualizer(activeMedia);
+
+            if (activeMedia.paused) {
+                activeMedia.play().catch(() => {});
+                state.isPaused = false;
+            } else {
+                activeMedia.pause();
+                state.isPaused = true;
+            }
+            const btn = document.getElementById('player-pause-btn');
+            if (btn) btn.textContent = state.isPaused ? '▶' : '||';
+        }
+
+        function togglePlayerMute() {
+            const activeMedia = getActiveAudioSource();
+            if (!activeMedia) return;
+            state.isMuted = !state.isMuted;
+            activeMedia.muted = state.isMuted;
+            const btn = document.getElementById('player-mute-btn');
+            if (btn) btn.textContent = state.isMuted ? '🔇' : '🔊';
+        }
+
+        // Edytor własnego utworu i tła
+        function openCreatorModal() {
+            document.getElementById('creator-editor-modal').style.display = 'flex';
+        }
+
+        function closeCreatorModal() {
+            document.getElementById('creator-editor-modal').style.display = 'none';
+        }
+
+        function applyCreatorMedia() {
+            const audioInput = document.getElementById('creator-audio-file');
+            const bgInput = document.getElementById('creator-bg-file');
+
+            const hasAudio = audioInput && audioInput.files && audioInput.files[0];
+            const hasBg = bgInput && bgInput.files && bgInput.files[0];
+
+            if (!hasAudio && !hasBg) {
+                alert("Wybierz najpierw plik wideo (.mp4) lub audio z komputera!");
+                return;
+            }
+
+            if (hasBg) {
+                const bgFile = bgInput.files[0];
+                const bgUrl = URL.createObjectURL(bgFile);
+                const bgVid = document.getElementById('bg-fish-video');
+                bgVid.src = bgUrl;
+                bgVid.play().catch(() => {});
+            }
+
+            if (hasAudio) {
+                const trackFile = audioInput.files[0];
+                const trackUrl = URL.createObjectURL(trackFile);
+
+                // Wycisz domyślne tło jeśli dodano osobny utwór
+                const bgVid = document.getElementById('bg-fish-video');
+                if (bgVid) bgVid.muted = true;
+
+                const customPlayer = document.getElementById('custom-track-player');
+                customPlayer.src = trackUrl;
+                customPlayer.muted = false;
+                customPlayer.volume = 0.8;
+                state.isCustomTrackActive = true;
+                state.isPaused = false;
+                state.isMuted = false;
+                state.currentTrackName = trackFile.name;
+
+                connectMediaToVisualizer(customPlayer);
+                customPlayer.play().catch(() => {});
+            }
+
+            closeCreatorModal();
+            render();
+        }
+
+        // Scam reklama -> Ładowanie -> Avast Antivirus
+        function triggerScamAd() {
+            const loadModal = document.getElementById('scam-loading-modal');
+            const bar = document.getElementById('scam-progress-bar');
+            loadModal.style.display = 'flex';
+            bar.style.width = '0%';
+
+            setTimeout(() => {
+                bar.style.width = '100%';
+            }, 50);
+
+            setTimeout(() => {
+                loadModal.style.display = 'none';
+                document.getElementById('avast-blocked-modal').style.display = 'flex';
+            }, 1750);
+        }
+
+        function closeAvastModal() {
+            document.getElementById('avast-blocked-modal').style.display = 'none';
+        }
+
+        // Dźwięki przejść
+        function playAlternatingTransitionSound() {
+            ensureFishAudioPlaying();
+            const audioId = sfxToggle === 0 ? 'sfx-1' : 'sfx-2';
+            sfxToggle = sfxToggle === 0 ? 1 : 0;
+            const sfx = document.getElementById(audioId);
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.volume = 0.9;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        function playReturnCyclingSound() {
+            ensureFishAudioPlaying();
+            const soundId = `ret-sound-${returnSoundIndex}`;
+            const sfx = document.getElementById(soundId);
+            returnSoundIndex = returnSoundIndex >= 3 ? 1 : returnSoundIndex + 1;
+            if (sfx) {
+                sfx.currentTime = 0;
+                sfx.volume = 1.0;
+                sfx.play().catch(() => {});
+            }
+        }
+
+        function buildHtmlForCurrentState() {
+            if (state.view === 'rules') {
+                return `
+                    <div class="portal-box">
+                        <div style="background-color: #000033; padding: 6px 12px; border: 2px inset #808080; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-family: 'Courier New', monospace; font-size: 13px;">
+                            <span>★ SKIBIDI AWARDS 2006 ★ | REGULAMIN</span>
+                            <button class="retro-btn-small" onclick="showHome()">✖ WYJDŹ</button>
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 15px;">
+                            <h1 class="blink" style="color: #FF0000; margin: 0 0 5px 0; font-size: 28px; text-shadow: 2px 2px #000000;">
+                                ⚠️ PRZECZYTAJ PRZED GŁOSOWANIEM ⚠️
+                            </h1>
+                            <p style="font-size: 13px; color: #00FFFF; margin: 0; font-family: 'Courier New', monospace;">Zapoznaj się z zasadami panującymi na gali, zanim oddasz swój głos!</p>
+                        </div>
+
+                        <div style="background-color: #000022; border: 3px inset #808080; padding: 15px 20px; font-size: 14px; line-height: 1.6; color: #FFFFFF;">
+                            <ol style="margin: 0; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">
+                                    <strong style="color: #FFCC00;">GŁOSOWANIE JEST PRZEZNACZONE TYLKO DLA SKIBIDI SIGM!!</strong><br>
+                                    To znaczy że liczone są tylko głosy od użytkowników serwera <span style="color: #FF6666; font-weight: bold;">Z WYŁĄCZENIEM MULTIKONT</span>.
+                                </li>
+                                <li style="margin-bottom: 10px;">
+                                    Jest jeden głos na osobę, jeżeli chcecie wprowadzić jakieś zmiany do swojej karty głosów, to pv do mn (<strong style="color: #00FFFF;">xabab</strong>). Zmiany można wprowadzać do czasu zamknięcia głosowania.
+                                </li>
+                                <li style="margin-bottom: 10px;">
+                                    Próby majstrowania przy stronie/oszukiwania/niepostępowania zgodnie z zasadami będą skutkowały <span style="color: #FF0000; font-weight: bold;">UNIEWAŻNIENIEM GŁOSU I CHUJ MNIE TO OBCHODZI</span>.
+                                </li>
+                                <li style="margin-bottom: 10px;">
+                                    <strong style="color: #FFCC00;">ZALECAM</strong> nie streamować swojego głosowania. Niektóre kategorie/wybory mogą być kontrowersyjne, a poza tym wiadomo jak działa podświadomość człowieka w takich sytuacjach, gdy kolega jest na vc. To oczywiście nie jest zakaz tylko zalecenie, więc ostatecznie róbcie co chcecie ale no.
+                                </li>
+                                <li style="margin-bottom: 5px;">
+                                    <strong style="color: #00FF00;">PAMIĘTAJCIE ŻE TO ZABAWA.</strong> To nie jest jakaś poważna gala nagród, więc proszę się nie obrażać że ktoś nie został gdzieś nominowany, albo że nie wygrał, albo jakieś inne gównodramy, bo to rozjebie cały klimat i mija się z celem przedsięwzięcia (nie wiem jak to się pisze, ale nie sprawdze XD).
+                                </li>
+                            </ol>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="mega-download-btn" style="font-size: 17px; padding: 14px 22px;" onclick="proceedToVoting()">
+                                NIE JESTEM CWELEM I PRZECZYTAŁEM &gt;&gt;
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 15px; border-top: 2px groove #808080; padding-top: 8px; text-align: center;">
+                            <button class="retro-btn-small" onclick="showHome()">« WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (state.view === 'voting') {
+                const cat = categories[state.currentCategoryIndex];
+                const total = categories.length;
+                const selectedId = state.votes[cat.id];
+
+                let gridHtml = '<div class="nominees-grid-6">';
+                cat.nominees.forEach((nom) => {
+                    const isSelected = selectedId === nom.id;
+                    const avatar = nom.image
+                        ? `<img src="${nom.image}" style="width:68px; height:68px; border:2px inset #FFF; object-fit:cover; margin-bottom:6px;">`
+                        : `<div class="avatar-placeholder">${nom.name.substring(0, 2).toUpperCase()}</div>`;
+
+                    gridHtml += `
+                        <div class="nominee-box ${isSelected ? 'nominee-selected' : ''}" onclick="selectNominee(${cat.id}, '${nom.id}')">
+                            ${avatar}
+                            <div style="font-weight: bold; font-size: 16px; color: ${isSelected ? '#FFFF00' : '#00FFFF'};">
+                                ${isSelected ? '★ ' + nom.name + ' ★' : nom.name}
+                            </div>
+                            <div style="font-size: 11px; color: #CCCCCC; margin-top: 3px;">${nom.tag}</div>
+                            <div style="margin-top: 6px; font-size: 11px; font-family: Arial; color: ${isSelected ? '#00FF00' : '#888888'};">
+                                ${isSelected ? '[ WYBRANO ]' : '[ Kliknij aby wybrać ]'}
+                            </div>
+                        </div>
+                    `;
+                });
+                gridHtml += '</div>';
+
+                return `
+                    <div class="portal-box">
+                        <div style="background-color: #000033; padding: 6px 12px; border: 2px inset #808080; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; font-family: 'Courier New', monospace; font-size: 13px;">
+                            <span>★ SKIBIDI AWARDS 2006 ★ | KATEGORIA: <b>${state.currentCategoryIndex + 1} / ${total}</b></span>
+                            <span style="color: #00FF00;">POSTĘP: ${Math.round(((state.currentCategoryIndex + 1) / total) * 100)}%</span>
+                            <button class="retro-btn-small" onclick="showHome()">✖ WYJDŹ</button>
+                        </div>
+
+                        <div style="text-align: center; margin-bottom: 8px; border-bottom: 2px groove #FFCC00; padding-bottom: 8px;">
+                            <h1 style="color: #FFCC00; margin: 2px 0; font-size: 26px; text-shadow: 2px 2px #000000; text-transform: uppercase;">
+                                ${cat.name}
+                            </h1>
+                            <p style="font-size: 14px; color: #00FFFF; margin: 0;">${cat.description}</p>
+                        </div>
+
+                        ${gridHtml}
+
+                        <div style="display: flex; justify-content: space-between; margin-top: 12px; border-top: 2px groove #808080; padding-top: 10px;">
+                            <button class="retro-btn-small" onclick="prevCategory()">
+                                ${state.currentCategoryIndex === 0 ? '&lt;&lt; REGULAMIN' : '&lt;&lt; POPRZEDNIA KATEGORIA'}
+                            </button>
+                            <button class="retro-btn-small" style="background-color: ${selectedId ? '#FFCC00' : '#888888'}; font-size: 14px;" onclick="nextCategory()">
+                                ${state.currentCategoryIndex === total - 1 ? 'ZOBACZ KARTĘ WYNIKÓW &gt;&gt;' : 'NASTĘPNA KATEGORIA &gt;&gt;'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let mainContentHtml = '';
+
+            if (state.view === 'home') {
+                mainContentHtml = `
+                    <!-- 1. MIGAJĄCA RAMKA POWITALNA "WITAJ W XAB SIDE" -->
+                    <div class="xab-welcome-banner">
+                        <h1>WITAJ W <span>XAB SIDE</span></h1>
+                        <p>
+                            miejscu gdzie dostęp mają sami fajnoludzie (&gt;_◠) ✌️<br>
+                            więc jeżeli się tu dostałeś <i>toooo</i> ( ͡~ ͜ʖ ͡°)<br>
+                            oznacza że prawdopodobnie jesteś fajny/na (ɔ◔‿◔)ɔ ♥<br>
+                            proszę rozgość się (つᵔᗜᵔ)つ § 🍷 🍺 🗿 (づ◡﹏◡)づ<br>
+                            a jak znajdziesz jakieś nieprawidłowości to daj mi znać na pv a postaram się naprawić (¯▿¯)🤙
+                        </p>
+                    </div>
+
+                    <!-- 2. ŚRODKOWY UKŁAD: KOMIKS PO LEWEJ | ZIOMEK + GŁOŚNIK + PASKI + ODTWARZACZ PO PRAWEJ -->
+                    <div class="middle-split-grid">
+                        <!-- Lewa strona: Komiks tygodnia -->
+                        <div class="comic-box-wrapper">
+                            <div class="comic-title">KOMIKS TYGODNIA</div>
+                            <div class="comic-frame">
+                                [ Miejsce na komiks tygodnia ]
+                            </div>
+                        </div>
+
+                        <!-- Prawa strona: Ziomek z głośnikiem, czerwone paski zza głośnika, odtwarzacz i scam reklama -->
+                        <div class="dj-stage-column">
+                            <div class="dj-and-bars-row">
+                                <!-- Ziomek w kapturze oparty o głośnik -->
+                                <div class="dj-artwork-wrap">
+                                    <img src="slimakajki/ziomek.jpg" alt="Ziomek z głośnikiem">
+                                </div>
+
+                                <!-- Czerwone paski wizualizacji wychodzące z prawej krawędzi głośnika -->
+                                <div class="horizontal-eq-bars">
+                                    <div class="h-bar" style="width: 45%;"></div>
+                                    <div class="h-bar" style="width: 75%;"></div>
+                                    <div class="h-bar" style="width: 30%;"></div>
+                                    <div class="h-bar" style="width: 85%;"></div>
+                                    <div class="h-bar" style="width: 60%;"></div>
+                                    <div class="h-bar" style="width: 90%;"></div>
+                                    <div class="h-bar" style="width: 40%;"></div>
+                                    <div class="h-bar" style="width: 70%;"></div>
+                                </div>
+                            </div>
+
+                            <!-- Pasek retro odtwarzacza pod głośnikiem i wizualizacją -->
+                            <div class="retro-desktop-player">
+                                <div class="player-marquee-track">
+                                    <marquee scrollamount="4">🎵 TERAZ LECI: ${state.currentTrackName} 🎵</marquee>
+                                </div>
+                                <button id="player-mute-btn" class="player-square-btn" onclick="togglePlayerMute()" title="Wycisz / Włącz dźwięk">
+                                    ${state.isMuted ? '🔇' : '🔊'}
+                                </button>
+                                <button id="player-pause-btn" class="player-square-btn" onclick="togglePlayerPause()" title="Pauza / Odpauzuj">
+                                    ${state.isPaused ? '▶' : '||'}
+                                </button>
+                                <button class="player-square-btn" onclick="openCreatorModal()" title="Dodaj własny utwór lub tło (.mp4)">
+                                    ADD
+                                </button>
+                            </div>
+
+                            <!-- Oczywista scam reklama -> ładowanie -> Avast Antivirus -->
+                            <div class="scam-ad-box" onclick="triggerScamAd()">
+                                🚨 GRATULACJE! JESTEŚ 1,000,000 ODWIEDZAJĄCYM! KLIKNIJ TUTAJ ABY ODEBRAĆ DARMOWEGO IPHONE'A 4S + 500 ZŁ DO ŻABKI!! 🚨
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (state.view === 'summary') {
+                let rowsHtml = '';
+                categories.forEach((cat, idx) => {
+                    const nomId = state.votes[cat.id];
+                    const nom = cat.nominees.find(n => n.id === nomId);
+                    rowsHtml += `
+                        <tr>
+                            <td style="background-color: #000033; color: #FFCC00; font-weight: bold; width: 45%;">
+                                ${idx + 1}. ${cat.name}
+                            </td>
+                            <td style="background-color: #000022; color: #00FF00; font-weight: bold; font-size: 16px;">
+                                ${nom ? '🏆 ' + nom.name : '---'}
+                            </td>
+                            <td style="background-color: #000033; width: 70px; text-align: center;">
+                                <button class="retro-btn-small" onclick="editCategory(${idx})">Zmień</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                mainContentHtml = `
+                    <div id="vip-ballot-card" style="background-color: #000022; border: 4px double #FFCC00; padding: 12px;">
+                        <div style="text-align: center; border-bottom: 2px solid #FFCC00; padding-bottom: 8px; margin-bottom: 10px;">
+                            <span style="background-color: #FF0000; color: #FFF; padding: 2px 6px; font-size: 11px; font-weight: bold;">OFICJALNA KARTA GŁOSOWANIA</span>
+                            <h2 style="color: #FFFF00; margin: 6px 0 2px 0;">SKIBIDI AWARDS 2006 - MOJE TYPY</h2>
+                            <span style="font-size: 11px; color: #AAAAAA; font-family: 'Courier New', monospace;">Zrób PrintScreen (PrtScn) i wklej w Painta!</span>
+                        </div>
+
+                        <table style="width: 100%; border-collapse: collapse;">
+                            ${rowsHtml}
+                        </table>
+
+                        <div style="text-align: center; margin-top: 12px; font-size: 12px; color: #00FFFF; font-family: 'Courier New', monospace;">
+                            Wygenerowano na: skibidiawards2006.prv.pl
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 12px;">
+                        <button class="retro-btn-small" onclick="copyVotes()">📋 KOPIUJ WYNIKI DO SCHOWKA (NA GG)</button>
+                        <button class="retro-btn-small" onclick="showHome()">🏠 WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                    </div>
+                `;
+            }
+
             return `
                 <table class="main-table">
+                    <!-- GÓRNY NAGŁÓWEK ZE STRZAŁKAMI ZMIENIAJĄCYMI KOLORY -->
                     <tr>
                         <td colspan="2" class="header-cell">
                             <div class="marquee-bar">
-                                <marquee scrollamount="6">*** WITAJ NA NAJBARDZIEJ WYPASIONEJ STRONIE W POLSKIM INTERNECIE! ROZGOŚĆ SIĘ I SPRAWDŹ NOWOŚCI! ***</marquee>
+                                <marquee scrollamount="6">*** UWAGA! RUSZYŁO OFICJALNE GŁOSOWANIE NA SKIBIDI AWARDS 2006! ODDAJ SWÓJ GŁOS JUŻ TERAZ I POKAŻ KTO RZĄDZI W SIECI! ***</marquee>
                             </div>
                             <br>
-                            <div style="margin: 5px 0;">
-                                <span class="rainbow-arrow">&lt;&lt;</span>
-                                <span style="display:inline-block; font-size:32px; font-weight:900; color:#FFCC00; text-shadow: 3px 3px #FF0000; vertical-align:middle;">GŁOSUJ TERAZ</span>
-                                <span class="rainbow-arrow">&gt;&gt;</span>
+                            <div>
+                                <img src="slimakajki/TEKST-SKIBIDIAWARDS.jpg" alt="SKIBIDI AWARDS 2006" style="max-width: 100%; height: auto; border: 2px solid #333;">
                             </div>
                             <div style="margin-top: 8px;">
-                                <button class="retro-btn" onclick="alert('Trwa ładowanie systemu głosowania...')">&gt;&gt; KLIKNIJ TUTAJ ABY GŁOSOWAĆ &lt;&lt;</button>
+                                <img src="slimakajki/TEKST-GLOSUJTERAZ.gif" alt="GLOSUJ TERAZ" style="max-width: 100%; height: auto;">
                             </div>
-                            <div style="font-size: 11px; color: #00FF00; font-family: 'Courier New', monospace; margin-top: 4px;">
+                            <div style="margin-top: 10px; margin-bottom: 6px;">
+                                <span class="header-side-arrow">➡➡</span>
+                                <button class="retro-btn" onclick="startVoting()">&gt;&gt; KLIKNIJ TUTAJ ABY GŁOSOWAĆ &lt;&lt;</button>
+                                <span class="header-side-arrow">⬅⬅</span>
+                            </div>
+                            <div style="font-size: 12px; color: #00FF00; font-family: 'Courier New', monospace;">
                                 [ Najlepiej oglądać w rozdzielczości 800x600 w Internet Explorer 6.0 ]
                             </div>
                         </td>
                     </tr>
+
+                    <!-- ŚRODKOWY WIERSZ: LEWY PASEK BOCZNY + GŁÓWNA ZAWARTOŚĆ -->
                     <tr>
-                        <!-- Lewy panel boczny z popularnymi linkami i statystykami -->
                         <td class="sidebar-cell">
                             <div class="sidebar-title">🔥 POPULARNE:</div>
-                            <a class="sidebar-link" onclick="alert('Prison Break już wkrótce!')">» CZY PRISON BREAK JUŻ WYSZEDŁ?</a>
-                            <a class="sidebar-link" onclick="alert('Brak internetu na Sulbiny')">» ZAGRAJ - MY LIFE AT SULBINY</a>
-                            <a class="sidebar-link" onclick="alert('Top 10 żartów')">[HIT] TOP 10 ŻARTÓW O TWOJEJ STAREJ!!!</a>
-                            <a class="sidebar-link" onclick="alert('Darmowe dzwonki')">[ZA DARMO] NAJPOPULARNIEJSZE DZWONKI DO POBRANIA</a>
-                            <a class="sidebar-link" onclick="alert('Lordbud 3')">LORDBUG 3 - JUŻ DOSTĘPNE</a>
-                            <a class="sidebar-link" onclick="alert('Player')">//KLIKNIJ ŻEBY ZAGRAĆ</a>
-                            <a class="sidebar-link" onclick="alert('FAQ')">FAQ</a>
+                            <a class="sidebar-link" onclick="showHome()">» Strona Główna</a>
+                            <a class="sidebar-link" onclick="startVoting()">» GŁOSOWANIE 2006! <span class="blink" style="color: #FF0000; font-weight: bold;">[NEW]</span></a>
+                            <a class="sidebar-link" onclick="alertPlaceholder('Czy Prison Break już wyszedł')">» CZY PRISON BREAK JUŻ WYSZEDŁ</a>
+                            <a class="sidebar-link" onclick="alertPlaceholder('My Life at Sulbiny')">» ZAGRAJ - MY LIFE AT SULBINY</a>
+                            <a class="sidebar-link" onclick="alertPlaceholder('Top 10 Żartów o Twojej Starej')">[HIT] TOP 10 ŻARTÓW O TWOJEJ STAREJ!!!</a>
+                            <a class="sidebar-link" onclick="alertPlaceholder('Najpopularniejsze Dźwięki do Pobrania')">[ZA DARMO] NAJPOPULARNIEJSZE DŹWIĘKI DO POBRANIA</a>
+                            <a class="sidebar-link" onclick="alertPlaceholder('Lordbug 3')">LORDBUG 3 - JUŻ DOSTĘPNE</a>
+                            <a class="sidebar-link" onclick="alertPlaceholder('FAQ')">» FAQ</a>
 
                             <hr style="border: 1px inset #808080; margin: 12px 0;">
 
                             <div class="sidebar-title">📊 STATYSTYKI</div>
                             <div style="text-align: center; color: #FFFFFF; font-size: 11px;">
                                 Odwiedzin strony:<br>
-                                <div class="counter-box" style="margin-top: 4px;">0000029</div>
+                                <div id="visit-counter-display" class="counter-box" style="margin-top: 4px;">${realVisitCount}</div>
                                 <br><br>
-                                Online teraz: <b style="color: #00FF00;">69 osób</b>
+                                Online teraz: <b id="online-counter-display" style="color: #00FF00;">Ładowanie...</b>
                             </div>
 
                             <hr style="border: 1px inset #808080; margin: 12px 0;">
 
-                            <div class="sidebar-title" style="background:#FF0000; color:#FFF;">TOP 5 UŻYTKOWNIKÓW</div>
-                            <div style="font-size: 11px; color:#FFFF00; padding:4px; font-family:'Courier New', monospace;">
+                            <!-- TOP 5 UŻYTKOWNIKÓW TYGODNIA (zgodnie ze szkicem) -->
+                            <div style="text-align: center; color: #FF5555; font-weight: 900; font-size: 15px; line-height: 1.2; margin-bottom: 6px;">
+                                TOP 5 UŻYTKOWNIKÓW TYGODNIA
+                            </div>
+                            <div style="text-align: center; color: #BBBBFF; font-size: 12px; line-height: 1.45; font-weight: bold;">
                                 1. Pewpew<br>
                                 2. Balas<br>
                                 3. WarsawBoy67<br>
                                 4. Eychoke 1733<br>
                                 5. xBaba
                             </div>
+                            <div style="text-align: center; color: #7799FF; font-size: 11px; font-weight: bold; margin-top: 8px; line-height: 1.3;">
+                                POWODZENIA WSZYSTKIM W DOSTANIU SIĘ W NASTĘPNYM TYGODNIU!!!!
+                            </div>
+
+                            <!-- STICKY NOTE Z OGŁOSZENIEM O KONKURSIE + INTERAKTYWNA STRZAŁKA DO ZIOMKA -->
+                            <div class="sidebar-sticky-wrapper">
+                                <div class="sidebar-sticky-note">
+                                    <div style="font-weight: bold; color: #CC0000; border-bottom: 1px dashed #998800; padding-bottom: 3px; margin-bottom: 4px;">
+                                        📌 OGŁOSZENIE OD AUTORA:
+                                    </div>
+                                    Wielki konkurs na najlepszy nutowy klimat w tle! Kliknij <b>ADD</b> w odtwarzaczu obok ziomka, wrzuć swój plik i przetestuj wizualizację! 🎧🔥
+                                </div>
+
+                                <!-- Długa strzałka SVG wysuwająca się zza karteczki prosto na ziomka z głośnikiem -->
+                                <svg class="pointer-to-dj" viewBox="0 0 430 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 18 L405 18" stroke="#FFFF00" stroke-width="6" stroke-dasharray="12 6"/>
+                                    <polygon points="430,18 398,3 398,33" fill="#FF0000" stroke="#FFFF00" stroke-width="2"/>
+                                </svg>
+                            </div>
                         </td>
 
-                        <!-- Główna zawartość po prawej -->
                         <td class="content-cell">
-                            <!-- Witaj w xab side w migającej ramce -->
-                            <div class="welcome-retro-box">
-                                <h1 style="color: #FFFF00; margin: 0 0 8px 0; font-size: 26px; text-shadow: 2px 2px #FF0000; text-transform: uppercase;">
-                                    WITAJ W XAB SIDE
-                                </h1>
-                                <p style="font-size: 14px; color: #00FFFF; margin: 0; line-height: 1.5;">
-                                    miejscu gdzie dostęp mają sami fajnoludzie ( >‿◠ ) 👍<br>
-                                    więc jeżeli się tu dostałeś <i>toooo</i> ( ͡~ ͜ʖ ͡°)<br>
-                                    oznacza że prawdopodobnie jesteś fajny/na (ᴖ◡ᴖ)🕆♥<br>
-                                    proszę rozgość się (つᵔᗜᵔ)つ § 🍷 🍺 🗿 (づ◡﹏◡)づ<br>
-                                    a jak znajdziesz jakieś nieprawidłowości to daj mi znać na pv a postaram się naprawić (¯▿¯)🤙
-                                </p>
-                            </div>
-
-                            <!-- Układ: Komiks po lewej, Głośnik i Wizualizacja po prawej -->
-                            <div class="main-stage-layout">
-                                <!-- Komiks tygodnia -->
-                                <div class="comic-panel">
-                                    <div style="background:#FFCC00; color:#000; font-weight:bold; padding:3px; margin-bottom:6px;">KOMIKS TYGODNIA</div>
-                                    <div style="display:flex; justify-content:center; align-items:center; height:230px; border:2px dashed #666;">
-                                        [ Miejsce na Twój komiks ]
-                                    </div>
-                                </div>
-
-                                <!-- Głośnik, Wizualizator i Odtwarzacz -->
-                                <div class="speaker-area">
-                                    <div style="font-weight:bold; color:#FFCC00; font-family:'Courier New', monospace; font-size:14px; margin-bottom:4px;">
-                                        🎵 GŁOŚNIK & WIZUALIZACJA 🎵
-                                    </div>
-
-                                    <!-- Nienaruszony rysunek ziutka i głośnika -->
-                                    <div style="font-family:monospace; font-size:11px; color:#C0C0C0; line-height:1.2; margin: 4px 0;">
-                                        (o_o) ♫  [O===O] [◎]
-                                    </div>
-
-                                    <!-- Wizualizacja dźwięku - czerwone paski zza głośnika -->
-                                    <div class="visualizer-container">
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                        <div class="vis-bar"></div>
-                                    </div>
-
-                                    <!-- Odtwarzacz Winamp style -->
-                                    <div class="winamp-player">
-                                        <div class="winamp-screen">
-                                            <marquee scrollamount="4">🎶 TERAZ LECI: ${state.songTitle} 🎶</marquee>
-                                        </div>
-                                        <div class="winamp-controls">
-                                            <div class="winamp-btn-group">
-                                                <button class="retro-btn-small" onclick="togglePlay()" title="Pauza / Odpauzuj">⏸</button>
-                                                <button class="retro-btn-small" onclick="adjustVolume()" title="Głośność">🔊</button>
-                                            </div>
-                                            <button class="retro-btn-small" style="background:#FFCC00;" onclick="openCreator()" title="Dodaj swój utwór i tło">📁 [ + DODAJ UTWÓR ]</button>
-                                        </div>
-                                    </div>
-
-                                    <!-- Scam Reklama -->
-                                    <div class="scam-banner" onclick="triggerScam()">
-                                        ✨ WYGRAŁEŚ IPHONE 2006! KLIKNIJ TUTAJ ŻEBY ODEBRAĆ NAGRODĘ NOWWWWW! ✨
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Notatka od autora (Sticky Note) ze strzałką -->
-                            <div class="sticky-note-wrapper">
-                                <div class="sticky-arrow">
-                                    <span style="font-size:28px; color:#FFFF00; text-shadow:2px 2px #FF0000; font-weight:900;">➔➔➔➔</span>
-                                </div>
-                                <div class="sticky-note" onclick="alert('Konkurs trwa do odwołania!')">
-                                    <b>Notatka od autora:</b><br>
-                                    Pamiętaj o konkursie na najlepszy podpis na GG! Nagrodą jest doładowanie do Heyah za 5zł! Powodzenia! 😉
-                                </div>
-                            </div>
-
+                            ${mainContentHtml}
                         </td>
                     </tr>
+
+                    <!-- DOLNE AKWARIUM Z BĄBELKAMI W STYLU PAINTA -->
                     <tr>
                         <td colspan="2" style="background-color: #000033; text-align: center;">
-                            <!-- Akwarium z bąbelkami na samym dole -->
-                            <div class="aquarium-box">
-                                <div style="color:#00FFFF; font-family:'Courier New', monospace; font-weight:bold; font-size:16px; margin-bottom:6px; text-shadow: 2px 2px #000;">
+                            <div class="bottom-aquarium-wrap">
+                                <div class="aquarium-header-text">
                                     AKWARIUM DLA TYCH CO ZAGŁOSOWALI
                                 </div>
-                                <div style="font-size: 28px; letter-spacing: 15px;">
-                                    🐠 🌿 🐢 🌿 🐟
+                                <div class="paint-aquarium-canvas">
+                                    <!-- Scenka akwarium w stylu MS Paint (piasek, glony, kamień) -->
+                                    <svg viewBox="0 0 1060 155" preserveAspectRatio="none" style="width:100%; height:100%; display:block;">
+                                        <!-- Piasek na dnie -->
+                                        <path d="M0 132 Q 260 120 540 135 T 1060 128 L 1060 155 L 0 155 Z" fill="#F4C430" stroke="#000" stroke-width="2"/>
+                                        <!-- Zielone glony po lewej -->
+                                        <path d="M60 140 Q 45 90 65 40 Q 80 85 75 140 Z" fill="#7CFC00" stroke="#000" stroke-width="2"/>
+                                        <path d="M130 142 Q 110 75 140 20 Q 160 80 148 142 Z" fill="#7CFC00" stroke="#000" stroke-width="2"/>
+                                        <path d="M220 138 Q 205 60 235 12 Q 255 75 238 138 Z" fill="#7CFC00" stroke="#000" stroke-width="2"/>
+                                        <path d="M310 140 Q 295 85 320 35 Q 335 85 325 140 Z" fill="#7CFC00" stroke="#000" stroke-width="2"/>
+                                        <!-- Szary kamień -->
+                                        <path d="M365 145 Q 385 112 430 115 Q 475 118 490 145 Z" fill="#888888" stroke="#000" stroke-width="2"/>
+                                        <!-- Roślinka po prawej -->
+                                        <path d="M925 138 L 925 25" stroke="#00AA44" stroke-width="4"/>
+                                        <ellipse cx="905" cy="50" rx="22" ry="6" fill="#00AA44" stroke="#000" stroke-width="1.5"/>
+                                        <ellipse cx="945" cy="65" rx="22" ry="6" fill="#00AA44" stroke="#000" stroke-width="1.5"/>
+                                        <ellipse cx="902" cy="85" rx="25" ry="6" fill="#00AA44" stroke="#000" stroke-width="1.5"/>
+                                        <ellipse cx="948" cy="100" rx="24" ry="6" fill="#00AA44" stroke="#000" stroke-width="1.5"/>
+                                    </svg>
+
+                                    <!-- Animowane bąbelki -->
+                                    <div class="bubble-dot" style="left: 14%; width: 10px; height: 10px; animation-duration: 3.6s;"></div>
+                                    <div class="bubble-dot" style="left: 23%; width: 14px; height: 14px; animation-duration: 4.8s; animation-delay: 1s;"></div>
+                                    <div class="bubble-dot" style="left: 41%; width: 9px; height: 9px; animation-duration: 3.9s; animation-delay: 0.5s;"></div>
+                                    <div class="bubble-dot" style="left: 62%; width: 12px; height: 12px; animation-duration: 5.2s; animation-delay: 2s;"></div>
+                                    <div class="bubble-dot" style="left: 78%; width: 8px; height: 8px; animation-duration: 3.4s; animation-delay: 1.4s;"></div>
+                                    <div class="bubble-dot" style="left: 88%; width: 13px; height: 13px; animation-duration: 4.4s; animation-delay: 0.8s;"></div>
                                 </div>
-                                <!-- Bąbelki animowane -->
-                                <div class="bubble" style="left: 20%; width: 8px; height: 8px; animation-duration: 3.2s;"></div>
-                                <div class="bubble" style="left: 45%; width: 12px; height: 12px; animation-duration: 4.5s;"></div>
-                                <div class="bubble" style="left: 70%; width: 6px; height: 6px; animation-duration: 2.8s;"></div>
-                                <div class="bubble" style="left: 85%; width: 10px; height: 10px; animation-duration: 5.1s;"></div>
                             </div>
                             <div style="margin-top: 10px; font-size: 11px; color: #808080; font-family: Arial, sans-serif;">
-                                Copyright &copy; 2006 XAB SIDE TEAM. Wszelkie prawa zastrzeżone. Kopiowanie bez zgody zabronione!
+                                Copyright &copy; 2006 SKIBIDI AWARDS TEAM. Wszelkie prawa zastrzeżone. Kopiowanie bez zgody zabronione!
                             </div>
                         </td>
                     </tr>
@@ -723,66 +1429,133 @@
         }
 
         function render() {
-            document.getElementById('current-box').innerHTML = buildPortalHtml();
-            initAudioAnalyzer();
+            const currentBox = document.getElementById('current-box');
+            currentBox.innerHTML = buildHtmlForCurrentState();
+            currentBox.style.display = 'block';
         }
 
-        function togglePlay() {
-            const mediaEl = document.getElementById('bg-media-element');
-            if (mediaEl.paused) {
-                mediaEl.play();
-                state.isPlaying = true;
-            } else {
-                mediaEl.pause();
-                state.isPlaying = false;
-            }
-        }
+        // Przejścia (Gwiazdka do przodu, ukośny slide przy cofaniu)
+        function runBoxedStarWipe(updateStateCallback) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            playAlternatingTransitionSound();
 
-        function adjustVolume() {
-            const mediaEl = document.getElementById('bg-media-element');
-            mediaEl.muted = !mediaEl.muted;
-            alert(mediaEl.muted ? "Wyciszono dźwięk!" : "Włączono dźwięk!");
-        }
+            const currentBox = document.getElementById('current-box');
+            const incomingBox = document.getElementById('incoming-box');
+            currentBox.style.display = 'none';
 
-        function triggerScam() {
-            const modal = document.getElementById('avast-modal');
-            modal.style.display = 'flex';
-        }
+            updateStateCallback();
+            incomingBox.innerHTML = buildHtmlForCurrentState();
+            incomingBox.className = '';
+            incomingBox.classList.add('star-mode');
+            void incomingBox.offsetWidth;
+            incomingBox.classList.add('star-wipe-open');
 
-        function closeAvast() {
-            document.getElementById('avast-modal').style.display = 'none';
-        }
-
-        function openCreator() {
-            document.getElementById('creator-modal').style.display = 'flex';
-        }
-
-        function closeCreator() {
-            document.getElementById('creator-modal').style.display = 'none';
-        }
-
-        function applyUserFile() {
-            const fileInput = document.getElementById('user-file-input');
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const fileURL = URL.createObjectURL(file);
-                
-                const container = document.getElementById('bg-video-container');
-                container.innerHTML = `<video id="bg-media-element" src="${fileURL}" autoplay loop playsinline></video>`;
-                
-                state.songTitle = file.name + ' (Własny plik użytkownika)';
-                closeCreator();
+            setTimeout(() => {
                 render();
-                
-                setTimeout(() => {
-                    initAudioAnalyzer();
-                }, 500);
+                incomingBox.style.transition = 'none';
+                incomingBox.className = '';
+                incomingBox.innerHTML = '';
+                void incomingBox.offsetWidth;
+                incomingBox.style.transition = '';
+                isTransitioning = false;
+            }, 1100);
+        }
+
+        function runSlideReturnWipe(updateStateCallback) {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            playReturnCyclingSound();
+
+            const currentBox = document.getElementById('current-box');
+            const incomingBox = document.getElementById('incoming-box');
+            currentBox.style.display = 'none';
+
+            updateStateCallback();
+            incomingBox.innerHTML = buildHtmlForCurrentState();
+            incomingBox.className = '';
+            incomingBox.classList.add('slide-mode');
+            void incomingBox.offsetWidth;
+            incomingBox.classList.add('slide-wipe-open');
+
+            setTimeout(() => {
+                render();
+                incomingBox.style.transition = 'none';
+                incomingBox.className = '';
+                incomingBox.innerHTML = '';
+                void incomingBox.offsetWidth;
+                incomingBox.style.transition = '';
+                isTransitioning = false;
+            }, 580);
+        }
+
+        function showHome() {
+            if (state.view === 'home') return;
+            runSlideReturnWipe(() => { state.view = 'home'; });
+        }
+
+        function prevCategory() {
+            if (state.currentCategoryIndex > 0) {
+                runSlideReturnWipe(() => { state.currentCategoryIndex--; });
             } else {
-                alert("Najpierw wybierz plik z komputera!");
+                runSlideReturnWipe(() => { state.view = 'rules'; });
             }
         }
 
+        function editCategory(index) {
+            runSlideReturnWipe(() => {
+                state.currentCategoryIndex = index;
+                state.view = 'voting';
+            });
+        }
+
+        function startVoting() {
+            runBoxedStarWipe(() => { state.view = 'rules'; });
+        }
+
+        function proceedToVoting() {
+            runBoxedStarWipe(() => {
+                state.view = 'voting';
+                state.currentCategoryIndex = 0;
+            });
+        }
+
+        function selectNominee(catId, nomId) {
+            state.votes[catId] = nomId;
+            render();
+        }
+
+        function nextCategory() {
+            const cat = categories[state.currentCategoryIndex];
+            if (!state.votes[cat.id]) {
+                alert("Musisz najpierw wybrać swojego faworyta w tej kategorii!");
+                return;
+            }
+            if (state.currentCategoryIndex < categories.length - 1) {
+                runBoxedStarWipe(() => { state.currentCategoryIndex++; });
+            } else {
+                runBoxedStarWipe(() => { state.view = 'summary'; });
+            }
+        }
+
+        function copyVotes() {
+            let text = "=== MOJE TYPY - SKIBIDI AWARDS 2006 ===\n";
+            categories.forEach((cat, idx) => {
+                const nom = cat.nominees.find(n => n.id === state.votes[cat.id]);
+                text += `${idx + 1}. ${cat.name}: ${nom ? nom.name : 'Brak'}\n`;
+            });
+            navigator.clipboard.writeText(text);
+            alert("Skopiowano Twoje typy! Możesz teraz wkleić je znajomym na Gadu-Gadu!");
+        }
+
+        function alertPlaceholder(name) {
+            alert("Sekcja '" + name + "' jest w budowie (Under Construction)! Dodamy ją później.");
+        }
+
+        // Start
         render();
+        updateRealVisitCounter();
+        startHorizontalVisualizerLoop();
     </script>
 </body>
 </html>
