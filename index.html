@@ -1520,6 +1520,38 @@
             }
         }
 
+        function handleAvatarError(imgEl, initials) {
+            const currentSrc = imgEl.getAttribute('src') || '';
+            const attempt = parseInt(imgEl.getAttribute('data-av-attempt') || '0', 10);
+            const match = currentSrc.match(/^(.*\/)([^/]+)(\.[^.]+)$/);
+
+            if (match) {
+                const folder = match[1];
+                const baseName = match[2];
+                const ext = match[3];
+                const alternatives = [
+                    `${folder}${baseName}.png`,
+                    `${folder}${baseName}.jpg`,
+                    `${folder}${baseName}.jpeg`,
+                    `${folder}${baseName}.gif`,
+                    `${folder}${baseName.charAt(0).toUpperCase() + baseName.slice(1)}${ext}`,
+                    `${folder}${baseName.charAt(0).toUpperCase() + baseName.slice(1)}.png`,
+                    `${folder}${baseName.charAt(0).toUpperCase() + baseName.slice(1)}.jpg`
+                ];
+                const uniqueAlts = [...new Set(alternatives)].filter(u => u !== currentSrc);
+
+                if (attempt < uniqueAlts.length) {
+                    imgEl.setAttribute('data-av-attempt', String(attempt + 1));
+                    imgEl.src = uniqueAlts[attempt];
+                    return;
+                }
+            }
+
+            if (imgEl.parentElement) {
+                imgEl.parentElement.innerHTML = `<span>${initials}</span>`;
+            }
+        }
+
         function buildHtmlForCurrentState() {
             if (state.view === 'biedronka3') {
                 if (!state.biedronkaLoaded) {
@@ -1675,7 +1707,7 @@
                             const avatarSrc = (nom.userKey && userAvatars[nom.userKey]) ? userAvatars[nom.userKey] : '';
                             const initials = (nom.userLabel || nom.name).replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '').substring(0, 2).toUpperCase() || '?';
                             const avatarHtml = avatarSrc
-                                ? `<img src="${avatarSrc}" alt="${nom.userLabel || nom.name}">`
+                                ? `<img src="${avatarSrc}" alt="${nom.userLabel || nom.name}" onerror="handleAvatarError(this, '${initials}')">`
                                 : `<span>${initials}</span>`;
 
                             const subText = nom.userLabel ? nom.userLabel : 'Nominowany';
