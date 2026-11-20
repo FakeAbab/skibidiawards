@@ -949,46 +949,42 @@
 
     <script>
         /* ============================================================================
-           SŁOWNIK AWATARÓW UŻYTKOWNIKÓW
+           SŁOWNIK AWATARÓW UŻYTKOWNIKÓW (wszystkie .png, małymi literami)
            ============================================================================ */
         const userAvatars = {
-            'rimuru': 'slimakajki/rimuru tokisaki.jpg',
-            'slimaq': 'slimakajki/slimaq.jpg',
-            'slimaq_2': 'slimakajki/slimaq_2.jpg',
-            'cybernat2000': 'slimakajki/cybernat.jpg',
+            'rimuru': 'slimakajki/rimuru tokisaki.png',
+            'slimaq': 'slimakajki/slimaq.png',
+            'slimaq_2': 'slimakajki/slimaq_2.png',
+            'cybernat2000': 'slimakajki/cybernat.png',
             'xabab': '',
             'cydi': '',
-            'pioterparkur': 'slimakajki/pioterparkur.jpg',
-            'ajczok': 'slimakajki/Ajczok.jpg',
-            'ajczok_2': 'slimakajki/Ajczok_2.jpg',
-            'solnik_nieintereresie': 'slimakajki/solnik.jpg',
-            'nieintereresie': 'slimakajki/nieintereresie.jpg',
-            'peli': 'slimakajki/peli.jpg',
-            'the_szczuren': 'slimakajki/the_szczuren.jpg',
-            'axyd': 'slimakajki/axyd.jpg',
-            'ruv': 'slimakajki/ruv.jpg',
-            'darkin': 'slimakajki/darkin.jpg',
-            'dzikus33k': 'slimakajki/dzikus33k.jpg',
+            'pioterparkur': 'slimakajki/pioterparkur.png',
+            'ajczok': 'slimakajki/ajczok.png',
+            'ajczok_2': 'slimakajki/ajczok_2.png',
+            'solnik_nieintereresie': 'slimakajki/solnik.png',
+            'nieintereresie': 'slimakajki/nieintereresie.png',
+            'peli': 'slimakajki/peli.png',
+            'the_szczuren': 'slimakajki/the_szczuren.png',
+            'axyd': 'slimakajki/axyd.png',
+            'ruv': 'slimakajki/ruv.png',
+            'darkin': 'slimakajki/darkin.png',
+            'dzikus33k': 'slimakajki/dzikus33k.png',
             'maxrell': '',
-            'adasko': 'slimakajki/adaśko.jpg',
-            'solnik': 'slimakajki/solnik.jpg',
+            'adasko': 'slimakajki/adaśko.png',
+            'solnik': 'slimakajki/solnik.png',
             'tata_parkura': '',
             'dziadek_piopio': '',
-            'nataniel': 'slimakajki/nataniel.jpg',
+            'nataniel': 'slimakajki/nataniel.png',
             'wszyscy': '',
-            'unikaki': 'slimakajki/unikaki.jpg',
-            'piopio': 'slimakajki/piopio.jpg',
-            'nibyfritz': 'slimakajki/nibyfritz.jpg',
-            'cisza': 'slimakajki/cisza.jpg',
-            'balas': 'slimakajki/Balas.jpg',
-            'roof': ''
+            'unikaki': 'slimakajki/unikaki.png',
+            'piopio': 'slimakajki/piopio.png',
+            'nibyfritz': 'slimakajki/nibyfritz.png',
+            'cisza': 'slimakajki/cisza.png',
+            'balas': 'slimakajki/balas.png'
         };
 
         /* ============================================================================
            17 KATEGORII GŁOSOWANIA
-           - layout: 'compact'    -> sam tekst lub obraz (kategorie 1, 2, 4, 6, 12)
-           - layout: 'media-bar'  -> media na środku + pasek z awatarem po lewej i nazwą
-           - layout: 'text-input' -> pole do wpisania własnej propozycji (kategoria 16)
            ============================================================================ */
         const categories = [
             {
@@ -1121,7 +1117,7 @@
                 description: "Wiadomości, które przeszły do historii serwera.",
                 nominees: [
                     { id: 'c10_1', name: 'sobiechy:', userLabel: 'The_Szczuren', userKey: 'the_szczuren', media: 'slimakajki/gener1_2.png' },
-                    { id: 'c10_2', name: 'Kebab + Warka Strong + Ninjago', userLabel: 'roof', userKey: 'roof', media: 'slimakajki/gener2_2.jpg' },
+                    { id: 'c10_2', name: 'Kebab + Warka Strong + Ninjago', userLabel: 'ruv', userKey: 'ruv', media: 'slimakajki/gener2_2.png' },
                     { id: 'c10_3', name: 'Nie interere sie (1000 dni temu)', userLabel: 'Balas', userKey: 'balas', media: 'slimakajki/gener3.png' },
                     { id: 'c10_4', name: 'Narazie kupuje kwiaty jej', userLabel: 'Nataniel', userKey: 'nataniel', media: 'slimakajki/gener4.png' },
                     { id: 'c10_5', name: 'Generacyjna wiadomość #5', userLabel: 'gener5', userKey: '', media: 'slimakajki/gener5.png' },
@@ -1150,8 +1146,8 @@
                 nominees: [
                     { id: 'c12_1', name: 'Gril u parkura', userLabel: 'xabab', media: '' },
                     { id: 'c12_2', name: 'Sobiechy:', userLabel: 'xabab', media: '' },
-                    { id: 'c12_3', name: 'Balasy / Ślimaczki', userLabel: 'wszyscy', media: 'slimakajki/mem1.jpg' },
-                    { id: 'c12_4', name: 'Nowy rok nowy ja / Ajczok', userLabel: 'peli', media: 'slimakajki/mem2.jpg' },
+                    { id: 'c12_3', name: 'Balasy / Ślimaczki', userLabel: 'wszyscy', media: 'slimakajki/mem1.png' },
+                    { id: 'c12_4', name: 'Nowy rok nowy ja / Ajczok', userLabel: 'peli', media: 'slimakajki/mem2.png' },
                     { id: 'c12_5', name: 'Top 4 wszystkiego', userLabel: 'peli', media: '' },
                     { id: 'c12_6', name: 'Ukrzyżowanie ajczoka', userLabel: 'ślimaq', media: '' }
                 ]
@@ -1468,7 +1464,6 @@
             }
         }
 
-        /* Helper renderujący media (obraz z fallbackiem rozszerzeń lub wideo .mp4/.webm/.mov) */
         function renderMediaElement(mediaSrc, fallbackLabel) {
             if (!mediaSrc) {
                 return `<div class="media-stage-placeholder">[ Miejsce na materiał ]<br>${fallbackLabel || ''}</div>`;
@@ -1870,7 +1865,7 @@
                             </div>
                             <br>
                             <div>
-                                <img src="slimakajki/TEKST-SKIBIDIAWARDS.jpg" alt="SKIBIDI AWARDS 2006" style="max-width: 100%; height: auto; border: 2px solid #333;">
+                                <img src="slimakajki/tekst-skibidiawards.png" alt="SKIBIDI AWARDS 2006" style="max-width: 100%; height: auto; border: 2px solid #333;">
                             </div>
                             <div style="margin-top: 8px;">
                                 <img src="slimakajki/TEKST-GLOSUJTERAZ.gif" alt="GLOSUJ TERAZ" style="max-width: 100%; height: auto;">
