@@ -241,7 +241,7 @@
         }
 
         .content-cell {
-            background-color: #000000;
+            background-color: rgba(0, 0, 85, 0.96);
             color: #FFFFFF;
         }
 
@@ -288,7 +288,7 @@
         .xab-welcome-banner {
             border: 4px dashed #FF0000;
             animation: welcomeFlashBorder 1.4s infinite linear;
-            background-color: #000018;
+            background-color: rgba(0, 0, 48, 0.9);
             padding: 12px 16px;
             text-align: center;
             margin-bottom: 14px;
@@ -324,7 +324,6 @@
             grid-template-columns: 250px 1fr;
             gap: 14px;
             align-items: start;
-            background-color: #000000;
         }
 
         @media (max-width: 860px) {
@@ -350,7 +349,7 @@
         .comic-frame {
             width: 100%;
             height: 390px;
-            background-color: #000022;
+            background-color: #000038;
             border: 3px solid #FF3333;
             box-sizing: border-box;
             display: flex;
@@ -361,12 +360,14 @@
             font-size: 13px;
         }
 
-        /* Prawa strona: Powiększony Ziomek kończący się przy głośniku + czerwone paski z boku głośnika na czarnym tle */
+        /* Prawa strona na jednolitym granatowym tle */
         .dj-stage-column {
             display: flex;
             flex-direction: column;
             align-items: stretch;
-            background-color: #000000;
+            background-color: #000033;
+            padding: 6px;
+            border: 2px inset #444488;
         }
 
         .dj-and-bars-row {
@@ -375,7 +376,7 @@
             justify-content: flex-start;
             position: relative;
             min-height: 395px;
-            background-color: #000000;
+            background-color: #000033;
         }
 
         .dj-artwork-wrap {
@@ -383,7 +384,7 @@
             z-index: 3;
             flex-shrink: 0;
             line-height: 0;
-            background-color: #000000;
+            background-color: #000033;
         }
 
         .dj-artwork-wrap img {
@@ -392,10 +393,9 @@
             height: auto;
             display: block;
             image-rendering: pixelated;
-            background-color: #000000;
         }
 
-        /* Poziome czerwone paski wizualizacji wychodzące z boku głośnika na czarnym tle */
+        /* Poziome czerwone paski wizualizacji stykające się z prawą krawędzią głośnika na granatowym tle */
         .horizontal-eq-bars {
             flex: 1;
             display: flex;
@@ -403,10 +403,10 @@
             justify-content: space-between;
             height: 255px;
             margin-bottom: 8px;
-            margin-left: -4px;
+            margin-left: -6px;
             z-index: 2;
             padding: 4px 0;
-            background-color: #000000;
+            background-color: #000033;
         }
 
         .h-bar {
@@ -674,7 +674,7 @@
 </head>
 <body>
 
-    <!-- Tło wideo z rybkami (lub własny obraz/wideo z edytora) -->
+    <!-- Tło wideo z rybkami (lub własny obraz/wideo użytkownika) -->
     <div id="bg-video-container">
         <video id="bg-fish-video" autoplay muted loop playsinline>
             <source src="slimakajki/ryby2.mp4" type="video/mp4">
@@ -1298,7 +1298,7 @@
                         <div class="dj-stage-column">
                             <div class="dj-and-bars-row">
                                 <div class="dj-artwork-wrap">
-                                    <img id="ziomek-speaker-img" src="slimakajki/ziomekpng.jpg" alt="Ziomek z głośnikiem">
+                                    <img id="ziomek-speaker-img" src="slimakajki/ziomeczeknaprawiony.png" alt="Ziomek z głośnikiem">
                                 </div>
 
                                 <!-- Czerwone paski wizualizacji wychodzące z boku głośnika -->
