@@ -551,6 +551,47 @@
             margin: 24px auto 0 auto;
         }
 
+        .stasiajki-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            max-width: 780px;
+            margin: 24px auto;
+        }
+
+        @media (max-width: 640px) {
+            .stasiajki-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stasiajki-card {
+            background-color: #000022;
+            border: 3px outset #FFCC00;
+            padding: 14px 8px;
+            text-align: center;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .stasiajki-num {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 38px;
+            font-weight: bold;
+            color: #00FF00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.55);
+            line-height: 1.1;
+        }
+
+        .stasiajki-unit {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            color: #00FFFF;
+            letter-spacing: 1px;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
         .counter-box {
             background-color: #000000;
             color: #00FF00;
@@ -677,6 +718,17 @@
             line-height: 1.4;
         }
 
+        .media-stage-quote {
+            color: #FFFF00;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 16px;
+            line-height: 1.35;
+            padding: 10px;
+            text-align: center;
+            word-break: break-word;
+        }
+
         .nominee-bottom-bar {
             display: flex;
             align-items: center;
@@ -722,7 +774,7 @@
 
         .nominee-bar-title {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
             color: #00FFFF;
             line-height: 1.25;
             word-break: break-word;
@@ -730,13 +782,6 @@
 
         .nominee-selected .nominee-bar-title {
             color: #FFFF00;
-        }
-
-        .nominee-bar-sub {
-            font-size: 11px;
-            color: #BBBBDD;
-            font-family: Arial, sans-serif;
-            margin-top: 2px;
         }
 
         .compact-image-box {
@@ -957,7 +1002,7 @@
             'slimaq_2': 'slimakajki/slimaq_2.png',
             'cybernat2000': 'slimakajki/cybernat.png',
             'xabab': '',
-            'cydi': '',
+            'cydi': 'slimakajki/cydi.png',
             'pioterparkur': 'slimakajki/pioterparkur.png',
             'ajczok': 'slimakajki/ajczok.png',
             'ajczok_2': 'slimakajki/ajczok_2.png',
@@ -970,7 +1015,7 @@
             'darkin': 'slimakajki/darkin.png',
             'dzikus33k': 'slimakajki/dzikus33k.png',
             'maxrell': '',
-            'adasko': 'slimakajki/adaśko.png',
+            'kulik': '',
             'solnik': 'slimakajki/solnik.png',
             'tata_parkura': '',
             'dziadek_piopio': '',
@@ -1035,7 +1080,7 @@
                 layout: "compact",
                 description: "Najważniejsze słowo lub hasło minionych miesięcy.",
                 nominees: [
-                    { id: 'c4_1', name: 'ajm siołi', media: '' },
+                    { id: 'c4_1', name: 'Ajm siołi', media: '' },
                     { id: 'c4_2', name: 'Łot', media: '' },
                     { id: 'c4_3', name: 'Negro', media: '' },
                     { id: 'c4_4', name: 'Pit-ca', media: '' },
@@ -1049,11 +1094,11 @@
                 layout: "media-bar",
                 description: "Które wcielenie zasługuje na statuetkę?",
                 nominees: [
-                    { id: 'c5_1', name: 'Zamasu', userLabel: 'rimuru', userKey: 'rimuru', media: '' },
-                    { id: 'c5_2', name: 'Gejo satoru', userLabel: 'rimuru', userKey: 'rimuru', media: '' },
+                    { id: 'c5_1', name: 'Zamasu', userLabel: 'Rimuru', userKey: 'rimuru', media: '' },
+                    { id: 'c5_2', name: 'Gejo satoru', userLabel: 'Rimuru', userKey: 'rimuru', media: '' },
                     { id: 'c5_3', name: 'Filip', userLabel: 'Rimuru', userKey: 'rimuru', media: '' },
                     { id: 'c5_4', name: 'Lox', userLabel: 'Rimuru', userKey: 'rimuru', media: '' },
-                    { id: 'c5_5', name: 'Kakaloxo', userLabel: 'rimuru', userKey: 'rimuru', media: '' },
+                    { id: 'c5_5', name: 'Kakaloxo', userLabel: 'Rimuru', userKey: 'rimuru', media: '' },
                     { id: 'c5_6', name: 'LubieOrtografie', userLabel: 'SLIMAQ', userKey: 'slimaq', media: '' }
                 ]
             },
@@ -1079,7 +1124,7 @@
                 description: "Dwie autorskie produkcje w bezpośrednim starciu!",
                 nominees: [
                     { id: 'c7_1', name: '180°', userLabel: 'CyberNat2000', userKey: 'cybernat2000', media: '' },
-                    { id: 'c7_2', name: "Five Nights at Piopio's", userLabel: 'xAbab', userKey: 'xabab', media: '' }
+                    { id: 'c7_2', name: "Five Nights at Piopio's", userLabel: 'XAbab', userKey: 'xabab', media: '' }
                 ]
             },
             {
@@ -1091,8 +1136,8 @@
                     { id: 'c8_1', name: 'CyberNat2000', userKey: 'cybernat2000', media: '' },
                     { id: 'c8_2', name: 'Ajczok', userKey: 'ajczok', media: '' },
                     { id: 'c8_3', name: 'Dzikus33k', userKey: 'dzikus33k', media: '' },
-                    { id: 'c8_4', name: 'parkur', userKey: 'pioterparkur', media: '' },
-                    { id: 'c8_5', name: 'xAbab', userKey: 'xabab', media: '' },
+                    { id: 'c8_4', name: 'Parkur', userKey: 'pioterparkur', media: '' },
+                    { id: 'c8_5', name: 'XAbab', userKey: 'xabab', media: '' },
                     { id: 'c8_6', name: 'Peli', userKey: 'peli', media: '' }
                 ]
             },
@@ -1102,10 +1147,10 @@
                 layout: "media-bar",
                 description: "Największy błąd taktyczny w prawdziwym życiu.",
                 nominees: [
-                    { id: 'c9_1', name: 'zmiana płci', userLabel: 'CyDi', userKey: 'cydi', media: '' },
+                    { id: 'c9_1', name: 'Zmiana płci', userLabel: 'CyDi', userKey: 'cydi', media: '' },
                     { id: 'c9_2', name: 'Wybór studiów informatycznych kurwa xddd w łodzi xddd', userLabel: 'PioterParkur', userKey: 'pioterparkur', media: '' },
-                    { id: 'c9_3', name: 'donos na biskita', userLabel: 'Ajczok', userKey: 'ajczok', media: '' },
-                    { id: 'c9_4', name: 'niezdanie matury', userLabel: 'Rimuru Tokisaki', userKey: 'rimuru', media: '' },
+                    { id: 'c9_3', name: 'Donos na biskita', userLabel: 'Ajczok', userKey: 'ajczok', media: '' },
+                    { id: 'c9_4', name: 'Niezdanie matury', userLabel: 'Rimuru Tokisaki', userKey: 'rimuru', media: '' },
                     { id: 'c9_5', name: 'Wyprawa do lasu po ratowanie streaka na tt', userLabel: 'Solnik + Nieintereresie', userKey: 'solnik_nieintereresie', media: '' },
                     { id: 'c9_6', name: 'Wypierdalanie się na kolegów gdy zobaczy gotke', userLabel: 'Peli', userKey: 'peli', media: '' }
                 ]
@@ -1116,12 +1161,12 @@
                 layout: "media-bar",
                 description: "Wiadomości, które przeszły do historii serwera.",
                 nominees: [
-                    { id: 'c10_1', name: 'sobiechy:', userLabel: 'The_Szczuren', userKey: 'the_szczuren', media: 'slimakajki/gener1_2.png' },
-                    { id: 'c10_2', name: 'Kebab + Warka Strong + Ninjago', userLabel: 'ruv', userKey: 'ruv', media: 'slimakajki/gener2_2.png' },
+                    { id: 'c10_1', name: 'Sobiechy:', userLabel: 'The_Szczuren', userKey: 'the_szczuren', media: 'slimakajki/gener1.png' },
+                    { id: 'c10_2', name: 'Kebab + Warka Strong + Ninjago', userLabel: 'Ruv', userKey: 'ruv', media: 'slimakajki/gener2.png' },
                     { id: 'c10_3', name: 'Nie interere sie (1000 dni temu)', userLabel: 'Balas', userKey: 'balas', media: 'slimakajki/gener3.png' },
                     { id: 'c10_4', name: 'Narazie kupuje kwiaty jej', userLabel: 'Nataniel', userKey: 'nataniel', media: 'slimakajki/gener4.png' },
-                    { id: 'c10_5', name: 'Generacyjna wiadomość #5', userLabel: 'gener5', userKey: '', media: 'slimakajki/gener5.png' },
-                    { id: 'c10_6', name: 'kto sponsoruje grilla (parkur 100%)', userLabel: 'Balas', userKey: 'balas', media: 'slimakajki/gener6.png' }
+                    { id: 'c10_5', name: 'Generacyjna wiadomość #5', userLabel: 'Gener5', userKey: '', media: 'slimakajki/gener5.png' },
+                    { id: 'c10_6', name: 'Kto sponsoruje grilla (parkur 100%)', userLabel: 'Balas', userKey: 'balas', media: 'slimakajki/gener6.png' }
                 ]
             },
             {
@@ -1130,10 +1175,10 @@
                 layout: "media-bar",
                 description: "Postacie o statusie absolutnej legendy.",
                 nominees: [
-                    { id: 'c11_1', name: 'maxrell', userKey: 'maxrell', media: '' },
-                    { id: 'c11_2', name: 'adaśko', userKey: 'adasko', media: '' },
-                    { id: 'c11_3', name: 'solnik', userKey: 'solnik', media: '' },
-                    { id: 'c11_4', name: 'tata parkura', userKey: 'tata_parkura', media: '' },
+                    { id: 'c11_1', name: 'Maxrell', userKey: 'maxrell', media: '' },
+                    { id: 'c11_2', name: 'Kulik', userKey: 'kulik', media: '' },
+                    { id: 'c11_3', name: 'Solnik', userKey: 'solnik', media: '' },
+                    { id: 'c11_4', name: 'Tata parkura', userKey: 'tata_parkura', media: '' },
                     { id: 'c11_5', name: 'Dziadek piopio', userKey: 'dziadek_piopio', media: '' },
                     { id: 'c11_6', name: 'Nataniel', userKey: 'nataniel', media: '' }
                 ]
@@ -1141,15 +1186,15 @@
             {
                 id: 12,
                 name: "Mem roku",
-                layout: "compact",
+                layout: "media-bar",
                 description: "Najlepszy mem mijającego roku.",
                 nominees: [
-                    { id: 'c12_1', name: 'Gril u parkura', userLabel: 'xabab', media: '' },
-                    { id: 'c12_2', name: 'Sobiechy:', userLabel: 'xabab', media: '' },
-                    { id: 'c12_3', name: 'Balasy / Ślimaczki', userLabel: 'wszyscy', media: 'slimakajki/mem1.png' },
-                    { id: 'c12_4', name: 'Nowy rok nowy ja / Ajczok', userLabel: 'peli', media: 'slimakajki/mem2.png' },
-                    { id: 'c12_5', name: 'Top 4 wszystkiego', userLabel: 'peli', media: '' },
-                    { id: 'c12_6', name: 'Ukrzyżowanie ajczoka', userLabel: 'ślimaq', media: '' }
+                    { id: 'c12_1', name: 'Gril u parkura', userLabel: 'XAbab', userKey: 'xabab', media: '' },
+                    { id: 'c12_2', name: 'Sobiechy:', userLabel: 'XAbab', userKey: 'xabab', media: '' },
+                    { id: 'c12_3', name: 'Balasy / Ślimaczki', userLabel: 'Wszyscy', userKey: 'wszyscy', media: 'slimakajki/mem1.png' },
+                    { id: 'c12_4', name: 'Nowy rok nowy ja / Ajczok', userLabel: 'Peli', userKey: 'peli', media: 'slimakajki/mem2.png' },
+                    { id: 'c12_5', name: 'Top 4 wszystkiego', userLabel: 'Peli', userKey: 'peli', media: '' },
+                    { id: 'c12_6', name: 'Ukrzyżowanie ajczoka', userLabel: 'Ślimaq', userKey: 'slimaq', media: '' }
                 ]
             },
             {
@@ -1173,8 +1218,8 @@
                 description: "Najważniejszy projekt stworzony przez społeczność.",
                 nominees: [
                     { id: 'c14_1', name: 'Biskit7pl', userLabel: 'Slimaq', userKey: 'slimaq', media: '' },
-                    { id: 'c14_2', name: 'Hetman + Impresja', userLabel: 'xAbab', userKey: 'xabab', media: '' },
-                    { id: 'c14_3', name: 'Rozjebanie Sobiechów', userLabel: 'maxrell', userKey: 'maxrell', media: '' },
+                    { id: 'c14_2', name: 'Hetman + Impresja', userLabel: 'XAbab', userKey: 'xabab', media: '' },
+                    { id: 'c14_3', name: 'Rozjebanie Sobiechów', userLabel: 'Maxrell', userKey: 'maxrell', media: '' },
                     { id: 'c14_4', name: 'Stasiajki 2025', userLabel: 'Slimaq', userKey: 'slimaq', media: '' },
                     { id: 'c14_5', name: 'Ajczokajki', userLabel: 'Ajczok', userKey: 'ajczok', media: '' },
                     { id: 'c14_6', name: 'Grill u Balasa', userLabel: 'Balas', userKey: 'balas', media: '' }
@@ -1191,7 +1236,7 @@
                     { id: 'c15_3', name: 'Peli', userKey: 'peli', media: '' },
                     { id: 'c15_4', name: 'Ajczok', userKey: 'ajczok', media: '' },
                     { id: 'c15_5', name: 'Rimuru Tokisaki', userKey: 'rimuru', media: '' },
-                    { id: 'c15_6', name: 'xAbab', userKey: 'xabab', media: '' }
+                    { id: 'c15_6', name: 'XAbab', userKey: 'xabab', media: '' }
                 ]
             },
             {
@@ -1210,7 +1255,7 @@
                     { id: 'c17_2', name: 'Balas', userKey: 'balas', media: '' },
                     { id: 'c17_3', name: 'Peli', userKey: 'peli', media: '' },
                     { id: 'c17_4', name: 'Ajczok', userKey: 'ajczok', media: '' },
-                    { id: 'c17_5', name: 'xAbab', userKey: 'xabab', media: '' },
+                    { id: 'c17_5', name: 'XAbab', userKey: 'xabab', media: '' },
                     { id: 'c17_6', name: 'Slimaq', userKey: 'slimaq', media: '' }
                 ]
             }
@@ -1233,6 +1278,54 @@
         let returnSoundIndex = 1;
         let isTransitioning = false;
         let biedronkaTimer = null;
+
+        // Północ 6 grudnia 2026 czasu polskiego (CET = UTC+1 -> 2026-12-05T23:00:00Z)
+        const STASIAJKI_TARGET_MS = Date.UTC(2026, 11, 5, 23, 0, 0, 0);
+
+        function pad2(n) {
+            return String(Math.max(0, n)).padStart(2, '0');
+        }
+
+        function computeStasiajkiCountdown() {
+            const diffMs = STASIAJKI_TARGET_MS - Date.now();
+            if (diffMs <= 0) {
+                return { finished: true, days: '00', hours: '00', minutes: '00', seconds: '00' };
+            }
+            const totalSeconds = Math.floor(diffMs / 1000);
+            const days = Math.floor(totalSeconds / 86400);
+            const hours = Math.floor((totalSeconds % 86400) / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            return {
+                finished: false,
+                days: pad2(days),
+                hours: pad2(hours),
+                minutes: pad2(minutes),
+                seconds: pad2(seconds)
+            };
+        }
+
+        function updateStasiajkiDom() {
+            if (state.view !== 'stasiajki') return;
+            const c = computeStasiajkiCountdown();
+            const dEl = document.getElementById('stasiajki-days');
+            const hEl = document.getElementById('stasiajki-hours');
+            const mEl = document.getElementById('stasiajki-minutes');
+            const sEl = document.getElementById('stasiajki-seconds');
+            const statusEl = document.getElementById('stasiajki-status-msg');
+
+            if (dEl) dEl.textContent = c.days;
+            if (hEl) hEl.textContent = c.hours;
+            if (mEl) mEl.textContent = c.minutes;
+            if (sEl) sEl.textContent = c.seconds;
+            if (statusEl) {
+                statusEl.textContent = c.finished
+                    ? '🎉 Nadeszła północ 6 grudnia 2026 czasu polskiego — Stasiajki czas zacząć!'
+                    : 'Docelowy moment: 6 grudnia 2026, 00:00:00 (czas polski / CET)';
+            }
+        }
+
+        setInterval(updateStasiajkiDom, 1000);
 
         let audioCtx = null;
         let analyser = null;
@@ -1553,6 +1646,49 @@
         }
 
         function buildHtmlForCurrentState() {
+            if (state.view === 'stasiajki') {
+                const c = computeStasiajkiCountdown();
+                return `
+                    <div class="portal-box" style="text-align: center; padding: 42px 24px;">
+                        <div style="background-color: #000033; padding: 6px 12px; border: 2px inset #808080; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; font-family: 'Courier New', monospace; font-size: 13px;">
+                            <span>★ LICZNIK CZASU - STASIAJKI 2026 ★</span>
+                            <button class="retro-btn-small" onclick="showHome()">« WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                        </div>
+
+                        <h1 style="color: #FFCC00; font-family: 'Arial Black', Impact, sans-serif; font-size: 36px; letter-spacing: 2px; text-shadow: 3px 3px #000000; margin: 0 0 8px 0;">
+                            ⏱️ ILE DO STASIAJEK? ⏱️
+                        </h1>
+
+                        <p id="stasiajki-status-msg" style="color: #00FFFF; font-family: 'Courier New', monospace; font-size: 14px; margin: 0 0 18px 0;">
+                            ${c.finished ? '🎉 Nadeszła północ 6 grudnia 2026 czasu polskiego — Stasiajki czas zacząć!' : 'Docelowy moment: 6 grudnia 2026, 00:00:00 (czas polski / CET)'}
+                        </p>
+
+                        <div class="stasiajki-grid">
+                            <div class="stasiajki-card">
+                                <div id="stasiajki-days" class="stasiajki-num">${c.days}</div>
+                                <div class="stasiajki-unit">Dni</div>
+                            </div>
+                            <div class="stasiajki-card">
+                                <div id="stasiajki-hours" class="stasiajki-num">${c.hours}</div>
+                                <div class="stasiajki-unit">Godzin</div>
+                            </div>
+                            <div class="stasiajki-card">
+                                <div id="stasiajki-minutes" class="stasiajki-num">${c.minutes}</div>
+                                <div class="stasiajki-unit">Minut</div>
+                            </div>
+                            <div class="stasiajki-card">
+                                <div id="stasiajki-seconds" class="stasiajki-num">${c.seconds}</div>
+                                <div class="stasiajki-unit">Sekund</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 26px;">
+                            <button class="retro-btn-small" onclick="showHome()">« WRÓĆ NA STRONĘ GŁÓWNĄ</button>
+                        </div>
+                    </div>
+                `;
+            }
+
             if (state.view === 'biedronka3') {
                 if (!state.biedronkaLoaded) {
                     return `
@@ -1623,7 +1759,7 @@
                                     To znaczy że liczone są tylko głosy od użytkowników serwera <span style="color: #FF6666; font-weight: bold;">Z WYŁĄCZENIEM MULTIKONT</span>.
                                 </li>
                                 <li style="margin-bottom: 10px;">
-                                    Jest jeden głos na osobę, jeżeli chcecie wprowadzić jakieś zmiany do swojej karty głosów, to pv do mn (<strong style="color: #00FFFF;">xabab</strong>). Zmiany można wprowadzać do czasu zamknięcia głosowania.
+                                    Jest jeden głos na osobę, jeżeli chcecie wprowadzić jakieś zmiany do swojej karty głosów, to pv do mn (<strong style="color: #00FFFF;">XAbab</strong>). Zmiany można wprowadzać do czasu zamknięcia głosowania.
                                 </li>
                                 <li style="margin-bottom: 10px;">
                                     Próby majstrowania przy stronie/oszukiwania/niepostępowania zgodnie z zasadami będą skutkowały <span style="color: #FF0000; font-weight: bold;">UNIEWAŻNIENIEM GŁOSU I CHUJ MNIE TO OBCHODZI</span>.
@@ -1705,28 +1841,39 @@
                             `;
                         } else {
                             const avatarSrc = (nom.userKey && userAvatars[nom.userKey]) ? userAvatars[nom.userKey] : '';
-                            const initials = (nom.userLabel || nom.name).replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '').substring(0, 2).toUpperCase() || '?';
+                            const displayNick = nom.userLabel || nom.name;
+                            const initials = displayNick.replace(/[^a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, '').substring(0, 2).toUpperCase() || '?';
                             const avatarHtml = avatarSrc
-                                ? `<img src="${avatarSrc}" alt="${nom.userLabel || nom.name}" onerror="handleAvatarError(this, '${initials}')">`
+                                ? `<img src="${avatarSrc}" alt="${displayNick}" onerror="handleAvatarError(this, '${initials}')">`
                                 : `<span>${initials}</span>`;
 
-                            const subText = nom.userLabel ? nom.userLabel : 'Nominowany';
+                            let topStageHtml = '';
+                            if (cat.id === 12) {
+                                topStageHtml = nom.media
+                                    ? renderMediaElement(nom.media, nom.name)
+                                    : `<div class="media-stage-quote">${nom.name}</div>`;
+                            } else {
+                                topStageHtml = renderMediaElement(nom.media, nom.name);
+                            }
+
+                            const barLabel = (cat.id === 12 || !nom.userLabel)
+                                ? displayNick
+                                : `${nom.name} (${nom.userLabel})`;
 
                             bodyHtml += `
                                 <div class="nominee-box ${isSelected ? 'nominee-selected' : ''}" onclick="selectNominee(${cat.id}, '${nom.id}')">
                                     <div class="media-stage-box">
-                                        ${renderMediaElement(nom.media, nom.name)}
+                                        ${topStageHtml}
                                     </div>
 
                                     <div class="nominee-bottom-bar">
-                                        <div class="user-avatar-slot" title="Awatar: ${subText}">
+                                        <div class="user-avatar-slot" title="${displayNick}">
                                             ${avatarHtml}
                                         </div>
                                         <div class="nominee-bar-text">
                                             <div class="nominee-bar-title">
-                                                ${isSelected ? '★ ' + nom.name : nom.name}
+                                                ${isSelected ? '★ ' + barLabel : barLabel}
                                             </div>
-                                            <div class="nominee-bar-sub">${subText}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -1798,7 +1945,7 @@
                         <div class="dj-stage-column">
                             <div class="dj-and-bars-row">
                                 <div class="dj-artwork-wrap">
-                                    <img id="ziomek-speaker-img" src="slimakajki/ziomeczeknaprawiony.png" alt="Ziomek z głośnikiem">
+                                    <img id="ziomek-speaker-img" src="slimakajki/ziomeczekfinal.png" alt="Ziomek z głośnikiem">
                                 </div>
 
                                 <div class="horizontal-eq-bars">
@@ -1918,6 +2065,7 @@
                             <div class="sidebar-title">🔥 POPULARNE:</div>
                             <a class="sidebar-link" onclick="showHome()">» Strona Główna</a>
                             <a class="sidebar-link" onclick="startVoting()">» GŁOSOWANIE 2006! <span class="blink" style="color: #FF0000; font-weight: bold;">[NEW]</span></a>
+                            <a class="sidebar-link" onclick="openStasiajkiCountdown()">» ILE DO STASIAJEK?</a>
                             <a class="sidebar-link" onclick="openBiedronka3()">» CZY BIEDRONKA 3 JUŻ WYSZŁA</a>
                             <a class="sidebar-link" onclick="alertPlaceholder('My Life at Sulbiny')">» ZAGRAJ - MY LIFE AT SULBINY</a>
                             <a class="sidebar-link" onclick="alertPlaceholder('Top 10 Żartów o Twojej Starej')">[HIT] TOP 10 ŻARTÓW O TWOJEJ STAREJ!!!</a>
@@ -1945,7 +2093,7 @@
                                 2. Balas<br>
                                 3. WarsawBoy67<br>
                                 4. Eychoke 1733<br>
-                                5. xBaba
+                                5. XBaba
                             </div>
                             <div style="text-align: center; color: #7799FF; font-size: 11px; font-weight: bold; margin-top: 8px; line-height: 1.3;">
                                 POWODZENIA WSZYSTKIM W DOSTANIU SIĘ W NASTĘPNYM TYGODNIU!!!!
@@ -2099,6 +2247,7 @@
             const currentBox = document.getElementById('current-box');
             currentBox.innerHTML = buildHtmlForCurrentState();
             currentBox.style.display = 'block';
+            updateStasiajkiDom();
         }
 
         function runBoxedStarWipe(updateStateCallback) {
@@ -2153,6 +2302,15 @@
                 incomingBox.style.transition = '';
                 isTransitioning = false;
             }, 580);
+        }
+
+        function openStasiajkiCountdown() {
+            if (biedronkaTimer) clearTimeout(biedronkaTimer);
+            if (state.view === 'stasiajki') return;
+            runBoxedStarWipe(() => {
+                state.view = 'stasiajki';
+                state.biedronkaLoaded = false;
+            });
         }
 
         function openBiedronka3() {
